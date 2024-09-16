@@ -1,0 +1,63 @@
+#!/usr/bin/env python3
+import sys
+from gpio.gpio import GPIO
+from gpio.pins import PinMode
+
+def print_usage():
+    print("Usage:")
+    print("  gpio mode <pin> <mode>")
+    print("  gpio <pin> write <on|off>")
+    print("  gpio <pin> read")
+    print("  gpio readall")
+
+def main():
+    if len(sys.argv) < 2:
+        print_usage()
+        sys.exit(1)
+
+    gpio = GPIO(PinMode.BCM)  # Default to BCM mode
+
+    command = sys.argv[1]
+
+    if command == "mode":
+        if len(sys.argv) != 4:
+            print_usage()
+            sys.exit(1)
+        pin = int(sys.argv[2])
+        mode = sys.argv[3]
+        if mode in ["in", "out"]:
+            gpio.set_direction(pin, mode)
+        else:
+            print(f"Invalid mode: {mode}")
+            sys.exit(1)
+
+    elif command == "write":
+        if len(sys.argv) != 4:
+            print_usage()
+            sys.exit(1)
+        pin = int(sys.argv[2])
+        value = sys.argv[3]
+        if value == "on":
+            gpio.write(pin, 1)
+        elif value == "off":
+            gpio.write(pin, 0)
+        else:
+            print(f"Invalid value: {value}")
+            sys.exit(1)
+
+    elif command == "read":
+        if len(sys.argv) != 3:
+            print_usage()
+            sys.exit(1)
+        pin = int(sys.argv[2])
+        value = gpio.read(pin)
+        print(f"Pin {pin}: {value}")
+
+    elif command == "readall":
+        gpio.read_all()
+
+    else:
+        print_usage()
+
+if __name__ == "__main__":
+    main()
