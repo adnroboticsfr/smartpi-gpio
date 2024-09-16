@@ -6,10 +6,10 @@ setup(
     description="Gestion des GPIO pour Smart Pi One",
     author="Votre Nom",
     packages=find_packages(),
-    entry_points={
-        'console_scripts': [
-            'gpio-smpi=bin.gpio-smpi:main',
-        ],
-    },
-    install_requires=[],  # Ajoutez les dépendances ici si nécessaire
+    scripts=['bin/gpio-smpi'],
+    install_requires=['RPi.GPIO'],
+    classifiers=[
+        "Programming Language :: Python :: 3",
+        "Operating System :: POSIX :: Linux",
+    ],
 )
