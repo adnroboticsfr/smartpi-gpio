@@ -1,5 +1,11 @@
-# setup.py
 from setuptools import setup, find_packages
+from setuptools.command.install import install as _install
+import subprocess
+
+class InstallCommand(_install):
+    def run(self):
+        _install.run(self)
+        subprocess.call(['python3', 'post_install.py'])
 
 setup(
     name="smart_pi_gpio",
@@ -12,4 +18,12 @@ setup(
             'gpio=bin.gpio:main',
         ],
     },
+    install_requires=[
+        # Add any required dependencies here
+    ],
+    python_requires='>=3.6',
+    cmdclass={
+        'install': InstallCommand,
+    },
 )
+
