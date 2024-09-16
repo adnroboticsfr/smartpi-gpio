@@ -1,7 +1,5 @@
-import os
-from .pins import Pins
-
-GPIO_PATH = "/sys/class/gpio"
+# -*- coding: utf-8 -*-
+from .pins import PinMode  # Assurez-vous que ceci est correct
 
 class GPIO:
     def __init__(self, mode=PinMode.BCM):
