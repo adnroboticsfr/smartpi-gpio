@@ -26,7 +26,7 @@ def main():
             print_usage()
             sys.exit(1)
         mode = sys.argv[3]
-        gpio.setup_pin(pin, direction=mode)
+        gpio.set_direction(pin, direction=mode)
 
     elif command == "write":
         if len(sys.argv) != 4:

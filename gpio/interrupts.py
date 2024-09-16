@@ -1,32 +1,30 @@
-import RPi.GPIO as GPIO_lib
+import os
+import select
 from .pins import Pins
 
 class GPIOInterrupts:
     def __init__(self, mode="BCM"):
-        GPIO_lib.setmode(GPIO_lib.BCM if mode == "BCM" else GPIO_lib.BOARD)
-        GPIO_lib.setwarnings(False)
+        self.mode = mode
 
     def add_interrupt(self, pin_number, edge, callback):
-        """
-        Ajouter une interruption sur une broche.
+        """Add interrupt for the specified pin."""
+        gpio_pin = Pins.get_pin(self.mode, pin_number)
+        with open(f"/sys/class/gpio/gpio{gpio_pin}/edge", 'w') as f:
+            f.write(edge)
+        
+        gpio_value_path = f"/sys/class/gpio/gpio{gpio_pin}/value"
+        fd = os.open(gpio_value_path, os.O_RDONLY)
+        poller = select.poll()
+        poller.register(fd, select.POLLPRI)
 
-        :param pin_number: Numéro de la broche
-        :param edge: Type d'interruption ('rising', 'falling', 'both')
-        :param callback: Fonction à appeler lorsque l'interruption est déclenchée
-        """
-        gpio_pin = Pins.get_pin("BCM", pin_number)
-        if edge == "rising":
-            GPIO_lib.add_event_detect(gpio_pin, GPIO_lib.RISING, callback=callback)
-        elif edge == "falling":
-            GPIO_lib.add_event_detect(gpio_pin, GPIO_lib.FALLING, callback=callback)
-        elif edge == "both":
-            GPIO_lib.add_event_detect(gpio_pin, GPIO_lib.BOTH, callback=callback)
-        else:
-            raise ValueError("Type d'interruption non valide. Utilisez 'rising', 'falling', ou 'both'.")
+        while True:
+            events = poller.poll(1000)  # Wait for an event with a timeout
+            if events:
+                callback(gpio_pin)
+                os.lseek(fd, 0, os.SEEK_SET)  # Reset the file descriptor
 
     def remove_interrupt(self, pin_number):
-        """
-        Supprimer l'interruption d'une broche.
-        """
-        gpio_pin = Pins.get_pin("BCM", pin_number)
-        GPIO_lib.remove_event_detect(gpio_pin)
+        """Remove interrupt from the pin."""
+        gpio_pin = Pins.get_pin(self.mode, pin_number)
+        with open(f"/sys/class/gpio/gpio{gpio_pin}/edge", 'w') as f:
+            f.write("none")
