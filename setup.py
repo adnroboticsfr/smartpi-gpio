@@ -1,13 +1,15 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='smart-pi-gpio',
-    version='1.0.0',
+    name="smartpi-gpio",
+    version="1.0.0",
+    description="Gestion des GPIO pour Smart Pi One",
+    author="Votre Nom",
     packages=find_packages(),
-    entry_points={
-        'console_scripts': [
-            'gpio=gpio.gpio:main',
-        ],
-    },
-    scripts=['bin/gpio.py'],  # Assurez-vous que le chemin est correct
+    scripts=['bin/gpio-smpi'],
+    install_requires=['RPi.GPIO'],
+    classifiers=[
+        "Programming Language :: Python :: 3",
+        "Operating System :: POSIX :: Linux",
+    ],
 )

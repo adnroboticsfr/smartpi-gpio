@@ -1,45 +1,55 @@
-# gpio/gpio.py
-import os
-from .pins import Pins, PinMode
-
-GPIO_PATH = "/sys/class/gpio"
+import RPi.GPIO as GPIO_lib
+from .pins import Pins
 
 class GPIO:
     def __init__(self, mode=PinMode.BCM):
         self.mode = mode
+        GPIO_lib.setmode(GPIO_lib.BCM if self.mode == PinMode.BCM else GPIO_lib.BOARD)
+        GPIO_lib.setwarnings(False)
 
     def export(self, pin_number):
+        """Export GPIO pin."""
         gpio_pin = Pins.get_pin(self.mode, pin_number)
-        if not gpio_pin:
-            raise ValueError("Invalid pin number")
-        if not os.path.exists(f"{GPIO_PATH}/gpio{gpio_pin}"):
-            with open(f"{GPIO_PATH}/export", 'w') as f:
-                f.write(str(gpio_pin))
+        GPIO_lib.setup(gpio_pin, GPIO_lib.OUT)
 
     def unexport(self, pin_number):
+        """Unexport GPIO pin."""
         gpio_pin = Pins.get_pin(self.mode, pin_number)
-        if os.path.exists(f"{GPIO_PATH}/gpio{gpio_pin}"):
-            with open(f"{GPIO_PATH}/unexport", 'w') as f:
-                f.write(str(gpio_pin))
-
-    def set_direction(self, pin_number, direction):
-        gpio_pin = Pins.get_pin(self.mode, pin_number)
-        with open(f"{GPIO_PATH}/gpio{gpio_pin}/direction", 'w') as f:
-            f.write(direction)
+        GPIO_lib.cleanup(gpio_pin)
 
     def write(self, pin_number, value):
+        """Write value to GPIO pin."""
         gpio_pin = Pins.get_pin(self.mode, pin_number)
-        with open(f"{GPIO_PATH}/gpio{gpio_pin}/value", 'w') as f:
-            f.write(str(value))
+        GPIO_lib.output(gpio_pin, GPIO_lib.HIGH if value else GPIO_lib.LOW)
 
     def read(self, pin_number):
+        """Read value from GPIO pin."""
         gpio_pin = Pins.get_pin(self.mode, pin_number)
-        with open(f"{GPIO_PATH}/gpio{gpio_pin}/value", 'r') as f:
-            return f.read().strip()
+        return GPIO_lib.input(gpio_pin)
+
+    def setup_pin(self, pin_number, direction, pull_up_down=None):
+        """
+        Configurer une broche avec des résistances internes (pull-up, pull-down).
+
+        :param pin_number: Numéro de la broche
+        :param direction: Mode de la broche ('in' pour entrée, 'out' pour sortie)
+        :param pull_up_down: Résistance interne ('pull_up', 'pull_down' ou None)
+        """
+        gpio_pin = Pins.get_pin(self.mode, pin_number)
+        if direction == "in":
+            if pull_up_down == "pull_up":
+                GPIO_lib.setup(gpio_pin, GPIO_lib.IN, pull_up_down=GPIO_lib.PUD_UP)
+            elif pull_up_down == "pull_down":
+                GPIO_lib.setup(gpio_pin, GPIO_lib.IN, pull_up_down=GPIO_lib.PUD_DOWN)
+            else:
+                GPIO_lib.setup(gpio_pin, GPIO_lib.IN)
+        elif direction == "out":
+            GPIO_lib.setup(gpio_pin, GPIO_lib.OUT)
+        else:
+            raise ValueError("Invalid direction. Use 'in' or 'out'.")
 
     def read_all(self):
-        """Display a table of all GPIO pin states."""
-        # This function will iterate over all pins and display their current states
+        """Display all GPIO pins states."""
         print("Pin | Mode  | Value")
         print("-------------------")
         for pin, name in Pins.BOARD_PINS.items():

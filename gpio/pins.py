@@ -9,18 +9,15 @@ class Pins:
     BOARD_PINS = {
         1: "SYS_3.3V", 2: "VDD_5V", 3: "GPIO2", 4: "VDD_5V", 5: "GPIO3", 6: "GND",
         7: "GPIO4", 8: "GPIO14", 9: "GND", 10: "GPIO15", 11: "GPIO17", 12: "GPIO18",
-        # Add other BOARD pins here
     }
 
     BCM_PINS = {
         2: "GPIO2", 3: "GPIO3", 4: "GPIO4", 17: "GPIO17", 27: "GPIO27", 22: "GPIO22",
         10: "GPIO10", 9: "GPIO9", 11: "GPIO11", 14: "GPIO14", 15: "GPIO15",
-        # Add other BCM pins here
     }
 
     SUNXI_PINS = {
         "PA0": 0, "PA1": 1, "PA2": 2, "PA3": 3, "PG6": 198, "PG7": 199,
-        # Add other SUNXI pins here
     }
 
     @classmethod
