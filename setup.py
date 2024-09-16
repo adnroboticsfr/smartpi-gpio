@@ -5,11 +5,11 @@ setup(
     version="1.0.0",
     description="Gestion des GPIO pour Smart Pi One",
     author="Votre Nom",
-    packages=find_packages(),
-    entry_points={
-        'console_scripts': [
-            'gpio-smpi=bin.gpio-smpi:main',
-        ],
-    },
-    install_requires=[],  # Ajoutez les dépendances ici si nécessaire
+    packages=find_packages(),  # Trouve automatiquement les packages, incluant 'gpio'
+    scripts=['bin/gpio-smpi'],  # Installe le script CLI dans /usr/local/bin ou /usr/bin
+    install_requires=[],
+    classifiers=[
+        "Programming Language :: Python :: 3",
+        "Operating System :: POSIX :: Linux",
+    ],
 )

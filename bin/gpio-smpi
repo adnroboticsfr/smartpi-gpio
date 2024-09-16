@@ -3,8 +3,8 @@ import sys
 from gpio.gpio import GPIO
 from gpio.pins import PinMode
 
-def print_usage():
-    print("Usage:")
+def afficher_utilisation():
+    print("Utilisation :")
     print("  gpio-smpi <pin> mode <in|out>")
     print("  gpio-smpi <pin> write <on|off>")
     print("  gpio-smpi <pin> read")
@@ -12,40 +12,60 @@ def print_usage():
 
 def main():
     if len(sys.argv) < 3:
-        print_usage()
+        afficher_utilisation()
         sys.exit(1)
 
     gpio = GPIO(PinMode.BCM)
 
-    pin = int(sys.argv[1])
-    command = sys.argv[2]
+    try:
+        pin = int(sys.argv[1])
+        commande = sys.argv[2]
 
-    if command == "mode":
-        if len(sys.argv) != 4:
-            print_usage()
+        if commande == "mode":
+            if len(sys.argv) != 4:
+                afficher_utilisation()
+                sys.exit(1)
+            mode = sys.argv[3].lower()
+            if mode not in ["in", "out"]:
+                print("Mode invalide. Utilisez 'in' ou 'out'.")
+                afficher_utilisation()
+                sys.exit(1)
+            gpio.set_direction(pin, direction=mode)
+
+        elif commande == "write":
+            if len(sys.argv) != 4:
+                afficher_utilisation()
+                sys.exit(1)
+            valeur = sys.argv[3].lower()
+            if valeur not in ["on", "off"]:
+                print("Valeur invalide. Utilisez 'on' ou 'off'.")
+                afficher_utilisation()
+                sys.exit(1)
+            gpio.write(pin, 1 if valeur == "on" else 0)
+
+        elif commande == "read":
+            if len(sys.argv) != 3:
+                afficher_utilisation()
+                sys.exit(1)
+            valeur = gpio.read(pin)
+            print(f"Pin {pin} : {valeur}")
+
+        elif commande == "readall":
+            etats = gpio.read_all()
+            for pin, etat in etats.items():
+                print(f"Pin {pin} : {etat}")
+
+        else:
+            afficher_utilisation()
             sys.exit(1)
-        mode = sys.argv[3]
-        gpio.set_direction(pin, direction=mode)
 
-    elif command == "write":
-        if len(sys.argv) != 4:
-            print_usage()
-            sys.exit(1)
-        value = sys.argv[3]
-        gpio.write(pin, 1 if value == "on" else 0)
-
-    elif command == "read":
-        if len(sys.argv) != 3:
-            print_usage()
-            sys.exit(1)
-        value = gpio.read(pin)
-        print(f"Pin {pin}: {value}")
-
-    elif command == "readall":
-        gpio.read_all()
-
-    else:
-        print_usage()
+    except ValueError as e:
+        print(f"Erreur : {e}")
+        afficher_utilisation()
+        sys.exit(1)
+    except Exception as e:
+        print(f"Erreur inattendue : {e}")
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()
