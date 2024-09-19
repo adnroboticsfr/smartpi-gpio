@@ -11,27 +11,34 @@ SmartPi-GPIO is a Python package that provides comprehensive control over GPIO (
 - Post-installation scripts for setting up GPIO interfaces
 
 ## Installation
+1. Update
 
-1. Clone the repository:
+   ```bash
+    sudo apt update && sudo apt upgrade
+    sudo apt-get install python3-dev python3-pip
+   ```
+
+2. Clone the repository:
+
    ```bash
    git clone https://github.com/adnroboticsfr/smartpi-gpio.git
    cd smartpi-gpio
    ```
 
-2. Install required dependencies:
+3. Install required dependencies:
 
     ```bash
     sudo pip3 install -r requirements.txt
     ```
 
-3. Build and install the package:
+4. Build and install the package:
 
     ```bash
     sudo python3 -m build
     sudo pip3 install dist/smartpi_gpio-1.0.0-py3-none-any.whl
     ```
 
-4. Activate the required GPIO interfaces:
+5. Activate the required GPIO interfaces:
 
     ```bash
     sudo /usr/local/bin/activate_interfaces.sh
