@@ -16,6 +16,7 @@ SmartPi-GPIO is a Python package that provides comprehensive control over GPIO (
    ```bash
     sudo apt update && sudo apt upgrade
     sudo apt-get install python3-dev python3-pip
+    sudo mv /usr/lib/python3.11/EXTERNALLY-MANAGED /usr/lib/python3.11/EXTERNALLY-MANAGED.old
    ```
 
 2. Clone the repository:
