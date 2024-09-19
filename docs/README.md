@@ -1,6 +1,6 @@
 # SmartPi-GPIO
 
-SmartPi-GPIO is a Python package that provides comprehensive control over GPIO (General Purpose Input/Output) pins for single-board computers (SBCs) like Raspberry Pi or devices running Armbian. It supports basic GPIO operations, PWM, I2C-based components like the PCA9685, OLED screens, and GPIO interrupts. It also includes a web-based interface to control the GPIO remotely.
+SmartPi-GPIO is a Python package that provides comprehensive control over GPIO (General Purpose Input/Output) pins for Smart Pi One (SBCs) running Armbian. It supports basic GPIO operations, PWM, I2C-based components like the PCA9685, OLED screens, and GPIO interrupts. It also includes a web-based interface to control the GPIO remotely.
 
 ## Features
 - Basic GPIO read/write operations
