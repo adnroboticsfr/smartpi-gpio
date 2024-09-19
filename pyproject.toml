@@ -14,3 +14,4 @@ python = "^3.7"
 
 [tool.poetry.scripts]
 gpio = "gpio.scripts:main"
+
