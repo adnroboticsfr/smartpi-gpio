@@ -11,46 +11,33 @@ SmartPi-GPIO is a Python package that provides comprehensive control over GPIO (
 - Post-installation scripts for setting up GPIO interfaces
 
 ## Installation
-1. Update
 
-   ```bash
-    sudo apt update && sudo apt upgrade
-    sudo apt-get install python3-dev python3-pip libjpeg-dev zlib1g-dev libtiff-dev
-    sudo mv /usr/lib/python3.11/EXTERNALLY-MANAGED /usr/lib/python3.11/EXTERNALLY-MANAGED.old
-   ```
-
-2. Clone the repository:
-
-   ```bash
-   git clone https://github.com/adnroboticsfr/smartpi-gpio.git
-   cd smartpi-gpio
-   ```
-
-3. Install required dependencies:
+1. Download the installation script:
 
     ```bash
-    sudo pip3 install -r requirements.txt
+    wget https://raw.githubusercontent.com/adnroboticsfr/smartpi-gpio/main/install_script.sh
     ```
 
-4. Build and install the package:
+2. Make the script executable:
 
     ```bash
-    sudo python3 -m build
-    sudo pip3 install dist/smartpi_gpio-1.0.0-py3-none-any.whl
+    chmod +x install_script.sh
     ```
 
-5. Activate the required GPIO interfaces:
+3. Run the installation script with administrative privileges:
 
     ```bash
-    sudo /usr/local/bin/activate_interfaces.sh
+    sudo ./install_script.sh
     ```
 
 ## Example Usage
 
-    Here’s a sample code to read from GPIO pin 17:
-    ```bash
-    from smartpi_gpio.gpio import GPIO
+Here’s a sample code to read from GPIO pin 17:
 
-    gpio = GPIO()
-    value = gpio.read(17)
-    print(f"GPIO 17 value: {value}")
+```python
+from smartpi_gpio.gpio import GPIO
+
+gpio = GPIO()
+value = gpio.read(17)
+print(f"GPIO 17 value: {value}")
+```
