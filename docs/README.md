@@ -21,7 +21,7 @@ SmartPi-GPIO is a Python package that provides comprehensive control over GPIO (
 2. Install required dependencies:
 
     ```bash
-    pip install -r requirements.txt
+    sudo pip3 install -r requirements.txt
     ```
 
 3. Build and install the package:
