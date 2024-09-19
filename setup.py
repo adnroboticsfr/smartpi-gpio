@@ -3,7 +3,6 @@ from setuptools.command.install import install
 import subprocess
 
 class PostInstallCommand(install):
-    """Post-installation for setup script."""
     def run(self):
         install.run(self)
         subprocess.run(['python3', 'post_install.py'])
@@ -14,7 +13,8 @@ setup(
     description="GPIO management for Smart Pi One",
     author="ADNroboticsfr",
     packages=find_packages(),
-    scripts=['bin/gpio'],
+    scripts=['bin/gpio',
+             'bin/activate_interfaces.sh'],
     install_requires=[
         'Flask>=2.0.0',
         'Pillow>=8.0.0',

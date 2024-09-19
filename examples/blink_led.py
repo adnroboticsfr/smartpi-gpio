@@ -2,7 +2,7 @@ import time
 from smartpi_gpio.gpio import GPIO
 
 gpio = GPIO()
-pin_led = 18
+pin_led = 7
 gpio.export(pin_led)
 gpio.set_direction(pin_led, "out")
 
