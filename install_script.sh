@@ -24,7 +24,7 @@ sudo pip3 install -r requirements.txt
 # Construire et installer le package
 echo "Construction et installation du package..."
 sudo python3 -m build
-sudo pip3 install dist/smartpi_gpio-1.0.0-py3-none-any.whl
+sudo pip3 install dist/smartpi-gpio-1.0.0-py3-none-any.whl
 
 # Activer les interfaces GPIO
 echo "Activation des interfaces GPIO..."
