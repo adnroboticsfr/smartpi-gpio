@@ -99,7 +99,7 @@ def main():
                     sys.exit(1)
                 value = sys.argv[3].lower()
                 if value not in ["on", "off", "high", "low", "1", "0"]:
-                    print("Invalid value. Use 'on', 'off', 'high', 'low', '1', or '0'.")
+                    print("Invalid value. Use on, off, high, low, 1, or 0.")
                     show_usage()
                     sys.exit(1)
                 numeric_value = 1 if value in ["on", "high", "1"] else 0
