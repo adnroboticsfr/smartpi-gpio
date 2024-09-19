@@ -1,4 +1,12 @@
 from setuptools import setup, find_packages
+from setuptools.command.install import install
+import subprocess
+
+class PostInstallCommand(install):
+    """Post-installation for setup script."""
+    def run(self):
+        install.run(self)
+        subprocess.run(['python3', 'post_install.py'])
 
 setup(
     name="smartpi-gpio",
@@ -14,9 +22,11 @@ setup(
         'luma.core>=1.0.0',
         'luma.oled>=1.0.0'
     ],
+    cmdclass={
+        'install': PostInstallCommand,
+    },
     classifiers=[
         "Programming Language :: Python :: 3",
         "Operating System :: POSIX :: Linux",
     ],
 )
-

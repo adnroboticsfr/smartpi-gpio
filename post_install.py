@@ -1,20 +1,10 @@
-# post_install.py
-import shutil
-import os
-import sys
+import subprocess
 
-def main():
-    script_name = 'gpio'
-    bin_path = os.path.join(sys.prefix, 'bin', script_name)
-    target_path = '/usr/bin/' + script_name
-
-    # Move the script to /usr/bin
+def run_post_install_script():
     try:
-        shutil.move(bin_path, target_path)
-        os.chmod(target_path, 0o755)
-        print(f'Successfully moved {script_name} to /usr/bin and made it executable.')
+        subprocess.run(['/usr/local/bin/activate_interfaces.sh'], check=True)
     except Exception as e:
-        print(f'Error: {e}')
+        print(f"Erreur lors de l'exécution du script d'installation : {e}")
 
 if __name__ == "__main__":
-    main()
+    run_post_install_script()
