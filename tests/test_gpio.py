@@ -1,7 +1,7 @@
 # tests/test_gpio.py
 import unittest
-from gpio.gpio import GPIO
-from gpio.pins import Pins
+from smartpi_gpio.gpio import GPIO
+from smartpi_gpio.pins import Pins
 
 class TestGPIO(unittest.TestCase):
     def setUp(self):

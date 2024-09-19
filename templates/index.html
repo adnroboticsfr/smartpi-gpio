@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartPi GPIO Control</title>
+</head>
+<body>
+    <h1>Control GPIO Pins</h1>
+    <div>
+        <h2>Read Pin</h2>
+        <form id="read-form">
+            <input type="number" id="pin-read" placeholder="Enter Pin Number">
+            <button type="button" onclick="readPin()">Read</button>
+        </form>
+        <div id="read-result"></div>
+    </div>
+
+    <div>
+        <h2>Write Pin</h2>
+        <form id="write-form">
+            <input type="number" id="pin-write" placeholder="Enter Pin Number">
+            <input type="number" id="pin-value" placeholder="Value (1/0)">
+            <button type="button" onclick="writePin()">Write</button>
+        </form>
+    </div>
+
+    <script>
+        function readPin() {
+            var pin = document.getElementById("pin-read").value;
+            fetch(`/gpio/${pin}/read`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("read-result").innerHTML = `Pin ${data.pin} value: ${data.value}`;
+                });
+        }
+
+        function writePin() {
+            var pin = document.getElementById("pin-write").value;
+            var value = document.getElementById("pin-value").value;
+            fetch(`/gpio/${pin}/write`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ value: value })
+            });
+        }
+    </script>
+</body>
+</html>
