@@ -20,7 +20,7 @@ setup(
         'Pillow>=8.0.0',
         'smbus2>=0.4.3',
         'luma.core>=1.0.0',
-        'luma.oled>=1.0.0'
+        'luma.oled>=1.0.0',
         'colorama>=0.4.6'
     ],
     cmdclass={
