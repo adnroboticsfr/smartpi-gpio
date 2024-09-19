@@ -12,32 +12,3 @@ SmartPi-GPIO is a Python package that provides comprehensive control over GPIO (
 
 ## Installation
 
-1. Download the installation script:
-
-    ```bash
-    wget https://raw.githubusercontent.com/adnroboticsfr/smartpi-gpio/main/install_script.sh
-    ```
-
-2. Make the script executable:
-
-    ```bash
-    chmod +x install_script.sh
-    ```
-
-3. Run the installation script with administrative privileges:
-
-    ```bash
-    sudo ./install_script.sh
-    ```
-
-## Example Usage
-
-Here’s a sample code to read from GPIO pin 17:
-
-```python
-from smartpi_gpio.gpio import GPIO
-
-gpio = GPIO()
-value = gpio.read(17)
-print(f"GPIO 17 value: {value}")
-```
