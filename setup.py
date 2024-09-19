@@ -18,7 +18,7 @@ setup(
     install_requires=[
         'Flask>=2.0.0',
         'Pillow>=8.0.0',
-        'smbus>=0.4.0',
+        'smbus2>=0.4.3',
         'luma.core>=1.0.0',
         'luma.oled>=1.0.0'
         'colorama>=0.4.6'
