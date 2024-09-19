@@ -14,7 +14,7 @@ SmartPi-GPIO is a Python package that provides comprehensive control over GPIO (
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/smartpi-gpio.git
+   git clone https://github.com/adnroboticsfr/smartpi-gpio.git
    cd smartpi-gpio
    ```
 
