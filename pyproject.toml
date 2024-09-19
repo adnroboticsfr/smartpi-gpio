@@ -3,7 +3,7 @@ requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.poetry]
-name = "Smartpi-gpio"
+name = "smartpi-gpio"
 version = "1.0.0"
 description = "A GPIO library for Smart Pi"
 authors = ["ADNroboticsfr <adnroboticsfr@gmail.com>"]
