@@ -1,14 +1,11 @@
-Here's the translated Python script:
-
-```python
 #!/usr/bin/env python3
 import sys
 from smartpi_gpio.gpio import GPIO
 from smartpi_gpio.pins import PinMode
-from smartpi_gpio.pca9685 import PCA9685  # Import the PCA9685 class
+from smartpi_gpio.pca9685 import PCA9685  # Importer la classe PCA9685
 
-def show_usage():
-    print("Usage:")
+def afficher_utilisation():
+    print("Utilisation :")
     print("  gpio <pin> mode <in|out> [pull-up|pull-down|none]")
     print("  gpio <pin> write <on|off|high|low|1|0>")
     print("  gpio <pin> read")
@@ -24,7 +21,6 @@ def main():
         show_usage()
         sys.exit(1)
 
-    # Initialize GPIO without specifying a mode
     gpio = GPIO()
 
     if sys.argv[1] == "pca9685":

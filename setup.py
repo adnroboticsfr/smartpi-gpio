@@ -21,6 +21,7 @@ setup(
         'smbus2>=0.4.0',
         'luma.core>=1.0.0',
         'luma.oled>=1.0.0'
+        'colorama>=0.4.6'
     ],
     cmdclass={
         'install': PostInstallCommand,
