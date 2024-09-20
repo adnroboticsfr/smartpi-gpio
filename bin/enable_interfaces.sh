@@ -33,7 +33,7 @@ add_overlay_if_missing() {
     fi
 }
 
-# Function to remove an overlay and associated configurations (such as frequency)
+# Function to remove an overlay and associated configurations
 remove_overlay() {
     local overlay="$1"
     
@@ -45,7 +45,7 @@ remove_overlay() {
         echo "No overlays line found."
     fi
 
-    # Remove any associated configuration (like frequency or baud rate)
+    # Remove any associated configuration
     if [[ "$overlay" == "spi0" ]]; then
         remove_spi_configuration "spi0"
     elif [[ "$overlay" == uart* ]]; then
@@ -69,6 +69,8 @@ remove_uart_configuration() {
     if grep -q "^${uart}_baud=" "$ARMBIAN_ENV"; then
         sed -i "/^${uart}_baud=/d" "$ARMBIAN_ENV"
         echo -e "\033[31m${uart}_baud configuration removed from $ARMBIAN_ENV\033[0m"
+    else
+        echo -e "\033[33mNo baud rate configuration found for $uart\033[0m"
     fi
 }
 
@@ -221,7 +223,6 @@ done
 # Show changes before reboot
 echo -e "\033[34mChanges made to overlays:\033[0m"
 grep "^overlays=" "$ARMBIAN_ENV"
-
 
 echo -e "\033[33mSystem will reboot in a moment to apply changes...\033[0m"
 echo "Press any key to cancel the reboot."
