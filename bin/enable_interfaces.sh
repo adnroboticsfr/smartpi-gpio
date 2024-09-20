@@ -6,7 +6,7 @@ BACKUP_ENV="/boot/armbianEnv_backup.txt"
 # Function to create a backup of armbianEnv.txt
 backup_armbian_env() {
     cp "$ARMBIAN_ENV" "$BACKUP_ENV"
-    echo -e "\033[32mBackup of armbianEnv.txt created at $BACKUP_ENV\033[0m"
+    echo "Backup of armbianEnv.txt created at $BACKUP_ENV"
 }
 
 # Function to validate user input
@@ -20,13 +20,13 @@ add_overlay_if_missing() {
     if grep -q "^overlays=" "$ARMBIAN_ENV"; then
         if ! grep -q "$overlay" "$ARMBIAN_ENV"; then
             sed -i "/^overlays=/ s/$/ $overlay/" "$ARMBIAN_ENV"
-            echo -e "\033[32m$overlay added to the overlays line\033[0m"
+            echo "$overlay added to the overlays line"
         else
-            echo -e "\033[33m$overlay is already present in the overlays line\033[0m"
+            echo "$overlay is already present in the overlays line"
         fi
     else
         echo "overlays=$overlay" >> "$ARMBIAN_ENV"
-        echo -e "\033[32mOverlays line created with $overlay\033[0m"
+        echo "Overlays line created with $overlay"
     fi
 }
 
@@ -36,7 +36,7 @@ remove_overlay() {
     
     if grep -q "^overlays=" "$ARMBIAN_ENV"; then
         sed -i "/^overlays=/ s/ $overlay//" "$ARMBIAN_ENV"
-        echo -e "\033[31m$overlay removed from the overlays line\033[0m"
+        echo "$overlay removed from the overlays line"
     fi
 
     remove_uart_configuration "$overlay"
@@ -66,59 +66,59 @@ configure_uart_baud_rate() {
     
     if grep -q "^${uart}_baud=" "$ARMBIAN_ENV"; then
         sed -i "/^${uart}_baud=/ s/= .*/= $baud_rate/" "$ARMBIAN_ENV"
-        echo -e "\033[32m$uart baud rate updated to $baud_rate\033[0m"
+        echo "$uart baud rate updated to $baud_rate"
     else
         echo "${uart}_baud=$baud_rate" >> "$ARMBIAN_ENV"
-        echo -e "\033[32m${uart}_baud set to $baud_rate\033[0m"
+        echo "${uart}_baud set to $baud_rate"
     fi
 }
 
 # Function to display GPIO ports and their numbers
 display_gpio_ports() {
-    echo -e "\033[36m=== GPIO Ports ===\033[0m"
-    echo -e "\033[32mPin#\tName\t\t\t\tLinux GPIO\033[0m"
-    echo "----------------------------------------------------------"
-    echo -e "\033[34m1\tSYS_3.3V\t\t\t\t-\033[0m"
-    echo -e "\033[34m2\tVDD_5V\t\t\t\t\t-\033[0m"
-    echo -e "\033[34m3\tI2C0_SDA/GPIOA12\t\t\t-\033[0m"
-    echo -e "\033[34m4\tVDD_5V\t\t\t\t\t-\033[0m"
-    echo -e "\033[34m5\tI2C0_SCL/GPIOA11\t\t\t-\033[0m"
-    echo -e "\033[34m6\tGND\t\t\t\t\t-\033[0m"
-    echo -e "\033[34m7\tGPIOG11\t\t\t203\t\033[0m"
-    echo -e "\033[34m8\tUART1_TX/GPIOG6\t\t198\t\033[0m"
-    echo -e "\033[34m9\tGND\t\t\t\t\t-\033[0m"
-    echo -e "\033[34m10\tUART1_RX/GPIOG7\t\t199\t\033[0m"
-    echo -e "\033[34m11\tUART2_TX/GPIOA0\t\t0\t\033[0m"
-    echo -e "\033[34m12\tGPIOA6\t\t\t6\t\033[0m"
-    echo -e "\033[34m13\tUART2_RTS/GPIOA2\t\t2\t\033[0m"
-    echo -e "\033[34m14\tGND\t\t\t\t\t-\033[0m"
-    echo -e "\033[34m15\tUART2_CTS/GPIOA3\t\t3\t\033[0m"
-    echo -e "\033[34m16\tUART1_RTS/GPIOG8\t\t200\t\033[0m"
-    echo -e "\033[34m17\tSYS_3.3V\t\t\t\t-\033[0m"
-    echo -e "\033[34m18\tUART1_CTS/GPIOG9\t\t201\t\033[0m"
-    echo -e "\033[34m19\tSPI0_MOSI/GPIOC0\t\t64\t\033[0m"
-    echo -e "\033[34m20\tGND\t\t\t\t\t-\033[0m"
-    echo -e "\033[34m21\tSPI0_MISO/GPIOC1\t\t65\t\033[0m"
-    echo -e "\033[34m22\tUART2_RX/GPIOA1\t\t1\t\033[0m"
-    echo -e "\033[34m23\tSPI0_CLK/GPIOC2\t\t66\t\033[0m"
-    echo -e "\033[34m24\tSPI0_CS/GPIOC3\t\t67\t\033[0m"
-    echo -e "\033[34m25\tGND\t\t\t\t\t-\033[0m"
-    echo -e "\033[34m26\tSPDIF-OUT/GPIOA17\t\t17\t\033[0m"
-    echo -e "\033[34m27\tI2C1_SDA/GPIOA19\t\t19\t\033[0m"
-    echo -e "\033[34m28\tI2C1_SCL/GPIOA18\t\t18\t\033[0m"
-    echo -e "\033[34m29\tGPIOA20\t\t\t20\t\033[0m"
-    echo -e "\033[34m30\tGND\t\t\t\t\t-\033[0m"
-    echo -e "\033[34m31\tGPIOA21\t\t\t21\t\033[0m"
-    echo -e "\033[34m32\tGPIOA7\t\t\t7\t\033[0m"
-    echo -e "\033[34m33\tGPIOA8\t\t\t8\t\033[0m"
-    echo -e "\033[34m34\tGND\t\t\t\t\t-\033[0m"
-    echo -e "\033[34m35\tUART3_CTS/SPI1_MISO/GPIOA16\t16\t\033[0m"
-    echo -e "\033[34m36\tUART3_TX/SPI1_CS/GPIOA13\t13\t\033[0m"
-    echo -e "\033[34m37\tGPIOA9\t\t\t9\t\033[0m"
-    echo -e "\033[34m38\tUART3_RTS/SPI1_MOSI/GPIOA15\t15\t\033[0m"
-    echo -e "\033[34m39\tGND\t\t\t\t\t-\033[0m"
-    echo -e "\033[34m40\tUART3_RX/SPI1_CLK/GPIOA14\t14\t\033[0m"
-    echo "----------------------------------------------------------"
+    echo "=== GPIO Ports ==="
+    echo "Pin#  Name                             Linux GPIO"
+    echo "-------------------------------------------------"
+    echo "1     SYS_3.3V                       -"
+    echo "2     VDD_5V                         -"
+    echo "3     I2C0_SDA/GPIOA12               -"
+    echo "4     VDD_5V                         -"
+    echo "5     I2C0_SCL/GPIOA11               -"
+    echo "6     GND                             -"
+    echo "7     GPIOG11                        203"
+    echo "8     UART1_TX/GPIOG6                198"
+    echo "9     GND                             -"
+    echo "10    UART1_RX/GPIOG7                199"
+    echo "11    UART2_TX/GPIOA0                 0"
+    echo "12    GPIOA6                          6"
+    echo "13    UART2_RTS/GPIOA2                2"
+    echo "14    GND                             -"
+    echo "15    UART2_CTS/GPIOA3                3"
+    echo "16    UART1_RTS/GPIOG8                200"
+    echo "17    SYS_3.3V                       -"
+    echo "18    UART1_CTS/GPIOG9                201"
+    echo "19    SPI0_MOSI/GPIOC0                64"
+    echo "20    GND                             -"
+    echo "21    SPI0_MISO/GPIOC1                65"
+    echo "22    UART2_RX/GPIOA1                 1"
+    echo "23    SPI0_CLK/GPIOC2                 66"
+    echo "24    SPI0_CS/GPIOC3                  67"
+    echo "25    GND                             -"
+    echo "26    SPDIF-OUT/GPIOA17               17"
+    echo "27    I2C1_SDA/GPIOA19                19"
+    echo "28    I2C1_SCL/GPIOA18                18"
+    echo "29    GPIOA20                          20"
+    echo "30    GND                             -"
+    echo "31    GPIOA21                          21"
+    echo "32    GPIOA7                           7"
+    echo "33    GPIOA8                           8"
+    echo "34    GND                             -"
+    echo "35    UART3_CTS/SPI1_MISO/GPIOA16     16"
+    echo "36    UART3_TX/SPI1_CS/GPIOA13        13"
+    echo "37    GPIOA9                           9"
+    echo "38    UART3_RTS/SPI1_MOSI/GPIOA15     15"
+    echo "39    GND                             -"
+    echo "40    UART3_RX/SPI1_CLK/GPIOA14       14"
+    echo "-------------------------------------------------"
     read -p "Press any key to continue..."  # Attendre l'entrée de l'utilisateur
 }
 
@@ -164,7 +164,7 @@ while true; do
     read -p "Enter your choice (1-8): " choice
 
     if ! validate_input "$choice"; then
-        echo -e "\033[31mInvalid option. Please try again.\033[0m"
+        echo "Invalid option. Please try again."
         continue
     fi
 
@@ -227,10 +227,10 @@ while true; do
 done
 
 # Show changes before reboot
-echo -e "\033[34mChanges made to overlays:\033[0m"
+echo "Changes made to overlays:"
 grep "^overlays=" "$ARMBIAN_ENV"
 
-echo -e "\033[33mSystem will reboot in a moment to apply changes...\033[0m"
+echo "System will reboot in a moment to apply changes..."
 echo "Press any key to cancel the reboot."
 backup_armbian_env
 
@@ -238,7 +238,7 @@ while true; do
     echo -n "."
     sleep 1
     if read -t 0.1 -n 1; then
-        echo -e "\n\033[31mReboot canceled.\033[0m"
+        echo -e "\nReboot canceled."
         break
     fi
 done
