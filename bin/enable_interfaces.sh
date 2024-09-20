@@ -64,7 +64,7 @@ configure_uart_baud_rate() {
 
 display_gpio_table() {
     echo -e "\n==================== GPIO Pinout ===========================================================\n"
-    echo -e "              Name          \t           Pins                Name"
+    echo -e "              Name          \t           Pins               Name"
     echo -e "============================================================================================"
     
     printf "\t${COLOR_VDD}    SYS_3.3V${COLOR_RESET}\t\t\t1\t2\t    ${COLOR_VDD}VDD_5V${COLOR_RESET}\n"
