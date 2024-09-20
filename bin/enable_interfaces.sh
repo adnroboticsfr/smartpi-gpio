@@ -58,7 +58,8 @@ show_dashboard() {
 # Function to display the menu
 show_menu() {
     clear
-    echo "=== Enable Features Menu ==="
+    echo "=== Enable/Disable Interfaces Menu ==="
+    echo "Please select options to enable or disable:"
     echo "-------------------------------------------"
     echo "| No | Status | Feature                             |"
     echo "-------------------------------------------"
@@ -139,7 +140,7 @@ while true; do
         8) break;;
     esac
 
-    echo "Press any key to continue..."
+    echo "Changes have been made. Press any key to continue..."
     read -n 1 -s
 done
 
@@ -161,6 +162,11 @@ echo ""
 if read -t 1 -n 1; then
     echo -e "\033[31mReboot canceled.\033[0m"
 else
-    echo "Rebooting now to apply changes..."
+    echo -n "Rebooting now"
+    for i in {1..3}; do
+        echo -n "."
+        sleep 1
+    done
+    echo ""
     reboot
 fi
