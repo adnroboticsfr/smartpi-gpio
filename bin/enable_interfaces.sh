@@ -50,13 +50,11 @@ remove_uart_configuration() {
     
     # Create a temporary file
     local temp_file=$(mktemp)
-    
+
     # Remove lines corresponding to the specified UART baud rate
     while IFS= read -r line; do
         if [[ "$line" != "${uart}_baud="* ]]; then
             echo "$line" >> "$temp_file"
-        else
-            echo -e "\033[31mRemoved: $line\033[0m"
         fi
     done < "$ARMBIAN_ENV"
     
