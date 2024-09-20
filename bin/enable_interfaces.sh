@@ -44,23 +44,9 @@ remove_overlay() {
 # Function to configure UART baud rate
 configure_uart_baud_rate() {
     local uart="$1"
-    local default_baud=115200
-    local current_baud
-
-    if grep -q "^${uart}_baud=" "$ARMBIAN_ENV"; then
-        current_baud=$(grep "^${uart}_baud=" "$ARMBIAN_ENV" | cut -d'=' -f2 | xargs)
-    else
-        current_baud=""
-    fi
-
-    echo -e "Current baud rate for $uart: \033[34m${current_baud:-$default_baud}\033[0m (default is $default_baud)"
-    read -p "Enter a new baud rate for $uart (or press Enter to keep the current value): " baud_rate
-    baud_rate=${baud_rate:-$current_baud}
-
-    if [ -z "$baud_rate" ]; then
-        baud_rate=$default_baud
-    fi
-
+    read -p "Enter baud rate for $uart (default is 115200): " baud_rate
+    baud_rate=${baud_rate:-115200}
+    
     # Update the baud rate configuration
     if grep -q "^${uart}_baud=" "$ARMBIAN_ENV"; then
         sed -i "/^${uart}_baud=/ s/= .*/= $baud_rate/" "$ARMBIAN_ENV"
@@ -68,6 +54,22 @@ configure_uart_baud_rate() {
     else
         echo "${uart}_baud=$baud_rate" >> "$ARMBIAN_ENV"
         echo -e "\033[32m${uart}_baud set to $baud_rate\033[0m"
+    fi
+}
+
+# Function to configure SPI frequency
+configure_spi_frequency() {
+    local spi="$1"
+    read -p "Enter frequency for $spi (default is 1MHz): " frequency
+    frequency=${frequency:-1000000}  # 1MHz by default
+    
+    # Update the frequency configuration
+    if grep -q "^${spi}_frequency=" "$ARMBIAN_ENV"; then
+        sed -i "/^${spi}_frequency=/ s/= .*/= $frequency/" "$ARMBIAN_ENV"
+        echo -e "\033[32m$spi frequency updated to $frequency\033[0m"
+    else
+        echo "${spi}_frequency=$frequency" >> "$ARMBIAN_ENV"
+        echo -e "\033[32m${spi}_frequency set to $frequency\033[0m"
     fi
 }
 
@@ -168,6 +170,7 @@ while true; do
                 remove_overlay "spi0"
             else
                 add_overlay_if_missing "spi0"
+                configure_spi_frequency "spi0"
             fi
             ;;
         8) break;;
