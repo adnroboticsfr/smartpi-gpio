@@ -67,7 +67,7 @@ display_gpio_table() {
     echo -e "              Name          \t           Pins                Name"
     echo -e "============================================================================================"
     
-    printf "\t${COLOR_VDD}SYS_3.3V${COLOR_RESET}\t\t\t1\t2\t${COLOR_VDD}VDD_5V${COLOR_RESET}\n"
+    printf "\t${COLOR_VDD}    SYS_3.3V${COLOR_RESET}\t\t\t1\t2\t    ${COLOR_VDD}VDD_5V${COLOR_RESET}\n"
     printf "\t${COLOR_I2C}I2C0_SDA${COLOR_RESET}/GPIOA12\t\t3\t4\t${COLOR_VDD}VDD_5V${COLOR_RESET}\n"
     printf "\t${COLOR_I2C}I2C0_SCL${COLOR_RESET}/GPIOA11\t\t5\t6\t${COLOR_VDD}GND${COLOR_RESET}\n"
     printf "\tGPIOG11\t\t\t\t7\t8\t${COLOR_UART}UART1_TX${COLOR_RESET}/GPIOG6\n"
