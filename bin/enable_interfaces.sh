@@ -63,9 +63,9 @@ configure_uart_baud_rate() {
 }
 
 display_gpio_table() {
-    echo -e "\n==================== GPIO Pinout ========================================\n"
-    echo -e "               Name          \t   Pins                          Name"
-    echo -e "========================================================================="
+    echo -e "\n==================== GPIO Pinout ===========================================================\n"
+    echo -e "               Name          \t          Pins                     Name"
+    echo -e "============================================================================================"
     
     printf "\t${COLOR_VDD}SYS_3.3V\t\t\t1\t2\t${COLOR_VDD}VDD_5V${COLOR_RESET}\n"
     printf "\t${COLOR_I2C}I2C0_SDA/GPIOA12\t\t3\t4\t${COLOR_VDD}VDD_5V${COLOR_RESET}\n"
@@ -88,7 +88,7 @@ display_gpio_table() {
     printf "\tGPIOA9\t\t\t\t37\t38\t${COLOR_UART}UART3_RTS${COLOR_RESET}/${COLOR_GPIO}SPI1_MOSI${COLOR_RESET}/GPIOA15\n"
     printf "\t${COLOR_VDD}GND${COLOR_RESET}\t\t\t\t39\t40\t${COLOR_UART}UART3_RX${COLOR_RESET}/${COLOR_GPIO}SPI1_CLK${COLOR_RESET}/GPIOA14\n"
     
-    echo -e "=====================================================\n"
+    echo -e "============================================================================================\n"
 }
 
 
