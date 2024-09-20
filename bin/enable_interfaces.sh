@@ -119,7 +119,7 @@ show_menu() {
     echo "Please select options to enable or disable, and choose"
     echo "an interface to configure:"
     echo "--------------------------------------------------------------"
-    echo "| No | Status | Interfaces                                   |"
+    echo "| No | Status | Interfaces                                    |"
     echo "--------------------------------------------------------------"
     echo "|  1 |  [$(if grep -q "pwm" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)]   | PWM (GPIO pin to configure:servomotors,LEDs) |"    
     echo "|  2 |  [$(if grep -q "i2c1" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)]   | I2C1 (SDA: GPIOA19[27], SCL: GPIOA18[28])    |"
@@ -156,17 +156,18 @@ while true; do
             ;; 
 
         2) 
-            if grep -q "i2c2" "$ARMBIAN_ENV"; then
-                remove_overlay "i2c2"
-            else
-                add_overlay_if_missing "i2c2"
-            fi
-            ;;
-        3) 
             if grep -q "i2c1" "$ARMBIAN_ENV"; then
                 remove_overlay "i2c1"
             else
                 add_overlay_if_missing "i2c1"
+            fi
+            ;;        
+
+        3) 
+            if grep -q "i2c2" "$ARMBIAN_ENV"; then
+                remove_overlay "i2c2"
+            else
+                add_overlay_if_missing "i2c2"
             fi
             ;;
         4) 
