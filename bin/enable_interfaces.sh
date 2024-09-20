@@ -62,13 +62,13 @@ show_menu() {
     echo "-------------------------------------------"
     echo "| No | Status | Feature                             |"
     echo "-------------------------------------------"
-    echo "|  1 | [X]    | I2C1 - Inter-Integrated Circuit Bus 1 (Pins 27/28) |"
-    echo "|  2 | [ ]    | I2C2 - Inter-Integrated Circuit Bus 2 (Pins not specified) |"
-    echo "|  3 | [ ]    | PWM - Pulse Width Modulation          |"
-    echo "|  4 | [X]    | UART1 - Universal Asynchronous Receiver-Transmitter (Pins 7/8) |"
-    echo "|  5 | [X]    | UART2 - Universal Asynchronous Receiver-Transmitter (Pins 11/12) |"
-    echo "|  6 | [ ]    | UART3 - Universal Asynchronous Receiver-Transmitter (Pins 37/38) |"
-    echo "|  7 | [ ]    | SPI0 - Serial Peripheral Interface (Pins 19/20/21/22) |"
+    echo "|  1 | [$(if grep -q "i2c1" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | I2C1                             |"
+    echo "|  2 | [$(if grep -q "i2c2" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | I2C2                             |"
+    echo "|  3 | [$(if grep -q "pwm" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | PWM                              |"
+    echo "|  4 | [$(if grep -q "uart1" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | UART1                            |"
+    echo "|  5 | [$(if grep -q "uart2" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | UART2                            |"
+    echo "|  6 | [$(if grep -q "uart3" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | UART3                            |"
+    echo "|  7 | [$(if grep -q "spi0" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | SPI0                             |"
     echo "-------------------------------------------"
     echo "|  8 | Exit                                     |"
     echo "-------------------------------------------"
@@ -82,47 +82,60 @@ while true; do
 
     if ! validate_input "$choice"; then
         echo "Invalid option. Please try again."
+        sleep 2
         continue
     fi
 
     case $choice in
-        1) add_overlay_if_missing "i2c1";;
+        1) 
+            if grep -q "i2c1" "$ARMBIAN_ENV"; then
+                remove_overlay "i2c1"
+            else
+                add_overlay_if_missing "i2c1"
+            fi
+            ;;
         2) 
-            if grep -q "^overlays=" "$ARMBIAN_ENV"; then
-                if ! grep -q "i2c2" "$ARMBIAN_ENV"; then
-                    add_overlay_if_missing "i2c2"
-                else
-                    remove_overlay "i2c2"
-                fi
+            if grep -q "i2c2" "$ARMBIAN_ENV"; then
+                remove_overlay "i2c2"
             else
                 add_overlay_if_missing "i2c2"
             fi
             ;;
         3) 
-            if grep -q "^overlays=" "$ARMBIAN_ENV"; then
-                if ! grep -q "pwm" "$ARMBIAN_ENV"; then
-                    add_overlay_if_missing "pwm"
-                else
-                    remove_overlay "pwm"
-                fi
+            if grep -q "pwm" "$ARMBIAN_ENV"; then
+                remove_overlay "pwm"
             else
                 add_overlay_if_missing "pwm"
             fi
             ;;
-        4) add_overlay_if_missing "uart1";;
-        5) add_overlay_if_missing "uart2";;
+        4) 
+            if grep -q "uart1" "$ARMBIAN_ENV"; then
+                remove_overlay "uart1"
+            else
+                add_overlay_if_missing "uart1"
+            fi
+            ;;
+        5) 
+            if grep -q "uart2" "$ARMBIAN_ENV"; then
+                remove_overlay "uart2"
+            else
+                add_overlay_if_missing "uart2"
+            fi
+            ;;
         6) 
-            if grep -q "^overlays=" "$ARMBIAN_ENV"; then
-                if ! grep -q "uart3" "$ARMBIAN_ENV"; then
-                    add_overlay_if_missing "uart3"
-                else
-                    remove_overlay "uart3"
-                fi
+            if grep -q "uart3" "$ARMBIAN_ENV"; then
+                remove_overlay "uart3"
             else
                 add_overlay_if_missing "uart3"
             fi
             ;;
-        7) add_overlay_if_missing "spi0";;
+        7) 
+            if grep -q "spi0" "$ARMBIAN_ENV"; then
+                remove_overlay "spi0"
+            else
+                add_overlay_if_missing "spi0"
+            fi
+            ;;
         8) break;;
     esac
 done
@@ -131,12 +144,17 @@ done
 echo "Changes made to overlays:"
 grep "^overlays=" "$ARMBIAN_ENV"
 
-# Prompt for reboot
+# Prompt for reboot with countdown
 echo "System will reboot in 10 seconds to apply changes..."
 echo "Press any key to cancel the reboot."
 backup_armbian_env
-sleep 10 & wait $!
-if [ $? -eq 0 ]; then
+
+for i in {10..1}; do
+    echo "$i..."
+    sleep 1
+done
+
+if read -t 1 -n 1; then
     echo "Reboot canceled."
 else
     echo "Rebooting now to apply changes..."
