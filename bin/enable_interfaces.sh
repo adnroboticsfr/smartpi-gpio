@@ -41,6 +41,20 @@ remove_overlay() {
     fi
 }
 
+# Function to display the dashboard
+show_dashboard() {
+    clear
+    echo "=== Dashboard ==="
+    echo "Current Overlays:"
+    if grep -q "^overlays=" "$ARMBIAN_ENV"; then
+        grep "^overlays=" "$ARMBIAN_ENV" | cut -d'=' -f2
+    else
+        echo "No overlays currently set."
+    fi
+    echo "=================="
+    echo ""
+}
+
 # Function to display the menu
 show_menu() {
     clear
@@ -62,6 +76,7 @@ show_menu() {
 
 # Main loop to show the menu and process choices
 while true; do
+    show_dashboard
     show_menu
     read -p "Enter your choice (1-8): " choice
 
@@ -111,6 +126,10 @@ while true; do
         8) break;;
     esac
 done
+
+# Show changes before reboot
+echo "Changes made to overlays:"
+grep "^overlays=" "$ARMBIAN_ENV"
 
 # Prompt for reboot
 echo "System will reboot in 10 seconds to apply changes..."
