@@ -159,17 +159,17 @@ show_dashboard() {
 show_menu() {
     clear
     echo "=== Enable/Disable Interfaces Menu ==="
-    echo "Please select options to enable or disable:"
+    echo "Enable/Disable une interface :"
     echo "-------------------------------------------"
     echo "| No | Status | Feature                             |"
     echo "-------------------------------------------"
-    echo "|  1 | [$(if grep -q "i2c1" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | I2C1                             |"
-    echo "|  2 | [$(if grep -q "i2c2" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | I2C2                             |"
-    echo "|  3 | [$(if grep -q "pwm" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | PWM                              |"
-    echo "|  4 | [$(if grep -q "uart1" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | UART1                            |"
-    echo "|  5 | [$(if grep -q "uart2" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | UART2                            |"
-    echo "|  6 | [$(if grep -q "uart3" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | UART3                            |"
-    echo "|  7 | [$(if grep -q "spi0" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | SPI0                             |"
+    echo "|  1 | [$(if grep -q "i2c1" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | I2C1 (SDA: GPIOA19, SCL: GPIOA18)  |"
+    echo "|  2 | [$(if grep -q "i2c2" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | I2C2 (SDA: GPIOA12, SCL: GPIOA11)  |"
+    echo "|  3 | [$(if grep -q "pwm" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | PWM (GPIO à déclarer)              |"
+    echo "|  4 | [$(if grep -q "uart1" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | UART1 (TX: GPIOG6, RX: GPIOG7)     |"
+    echo "|  5 | [$(if grep -q "uart2" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | UART2 (TX: GPIOA0, RX: GPIOA1)     |"
+    echo "|  6 | [$(if grep -q "uart3" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | UART3 (TX: GPIOA16, RX: GPIOA14)   |"
+    echo "|  7 | [$(if grep -q "spi0" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | SPI0 (MOSI: GPIOC0, MISO: GPIOC1)  |"
     echo "-------------------------------------------"
     echo "|  8 | Exit                                     |"
     echo "-------------------------------------------"
@@ -177,7 +177,7 @@ show_menu() {
 
 # Main loop to show the menu and process choices
 while true; do
-    display_pin_config
+    display_pin_config  # Afficher la configuration des pins
     show_dashboard
     show_menu
     read -p "Enter your choice (1-8): " choice
