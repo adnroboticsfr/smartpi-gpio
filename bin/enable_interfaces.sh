@@ -121,7 +121,7 @@ show_menu() {
     echo "----------------------------------------------------------"
     echo "| No | Status | Feature                                  |"
     echo "----------------------------------------------------------"
-    echo "|  1 |  [$(if grep -q "pwm" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)]   | PWM (GPIO pin to configure,used for servomotors,LEDs)|"    
+    echo "|  1 |  [$(if grep -q "pwm" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)]   | PWM (GPIO pin to configure: servomotors,LEDs)|"    
     echo "|  2 |  [$(if grep -q "i2c1" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)]   | I2C1 (SDA: GPIOA19[27], SCL: GPIOA18[28])|"
     echo "|  3 |  [$(if grep -q "i2c2" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)]   | I2C2 (SDA: GPIOA12[3], SCL: GPIOA11[4])  |"
     echo "|  4 |  [$(if grep -q "uart1" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)]   | UART1 (TX: GPIOG6[8], RX: GPIOG7[10])    |"
