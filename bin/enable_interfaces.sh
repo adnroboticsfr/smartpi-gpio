@@ -48,10 +48,20 @@ remove_overlay() {
 remove_uart_configuration() {
     local uart="$1"
     
-    if [[ "$uart" == "uart1" || "$uart" == "uart2" || "$uart" == "uart3" ]]; then
-        sed -i "/^${uart}_baud=/d" "$ARMBIAN_ENV"
-        echo -e "\033[31m${uart}_baud configuration removed from $ARMBIAN_ENV\033[0m"
-    fi
+    # Create a temporary file
+    local temp_file=$(mktemp)
+    
+    # Remove lines corresponding to the specified UART baud rate
+    while IFS= read -r line; do
+        if [[ "$line" != "${uart}_baud="* ]]; then
+            echo "$line" >> "$temp_file"
+        else
+            echo -e "\033[31mRemoved: $line\033[0m"
+        fi
+    done < "$ARMBIAN_ENV"
+    
+    # Move temp file to original file
+    mv "$temp_file" "$ARMBIAN_ENV"
 }
 
 # Function to configure UART baud rate
