@@ -18,7 +18,7 @@ backup_armbian_env() {
 
 # Function to validate user input
 validate_input() {
-    [[ $1 =~ ^[1-8]$ ]]
+    [[ $1 =~ ^[1-9]$ ]]
 }
 
 # Function to add an overlay if it is not already present
@@ -65,30 +65,30 @@ configure_uart_baud_rate() {
 # Function to display the GPIO pin table
 display_gpio_table() {
     echo -e "\n==================== GPIO Pinout ====================\n"
-    echo -e " Odd Pins\t\t\t\t\tEven Pins"
+    echo -e " Odd Pins\t\t\t\tEven Pins"
     echo -e "====================================================="
     
     # Odd pins
-    echo -e "${COLOR_VDD}1\tSYS_3.3V\t\t\t\t\t\t${COLOR_VDD}2\tVDD_5V${COLOR_RESET}"
-    echo -e "${COLOR_I2C}3\tI2C0_SDA/GPIOA12\t\t\t\t\t4\tVDD_5V${COLOR_RESET}"
-    echo -e "5\tI2C0_SCL/GPIOA11\t\t\t\t\t6\tGND"
-    echo -e "7\tGPIOG11\t\t\t\t\t\t8\t${COLOR_UART}UART1_TX/GPIOG6${COLOR_RESET}"
-    echo -e "9\tGND\t\t\t\t\t\t\t10\t${COLOR_UART}UART1_RX/GPIOG7${COLOR_RESET}"
-    echo -e "${COLOR_UART}11\tUART2_TX/GPIOA0\t\t\t\t\t12\tGPIOA6${COLOR_RESET}"
-    echo -e "13\tUART2_RTS/GPIOA2\t\t\t\t\t14\tGND"
-    echo -e "15\tUART2_CTS/GPIOA3\t\t\t\t\t16\tUART1_RTS/GPIOG8"
-    echo -e "17\tSYS_3.3V\t\t\t\t\t\t18\tUART1_CTS/GPIOG9"
-    echo -e "19\t${COLOR_GPIO}SPI0_MOSI/GPIOC0${COLOR_RESET}\t\t\t20\tGND"
-    echo -e "21\t${COLOR_GPIO}SPI0_MISO/GPIOC1${COLOR_RESET}\t\t\t22\t${COLOR_UART}UART2_RX/GPIOA1${COLOR_RESET}"
-    echo -e "23\t${COLOR_GPIO}SPI0_CLK/GPIOC2${COLOR_RESET}\t\t\t24\t${COLOR_GPIO}SPI0_CS/GPIOC3${COLOR_RESET}"
-    echo -e "25\tGND\t\t\t\t\t\t\t26\tSPDIF-OUT/GPIOA17"
-    echo -e "27\t${COLOR_I2C}I2C1_SDA/GPIOA19${COLOR_RESET}\t\t\t28\t${COLOR_I2C}I2C1_SCL/GPIOA18${COLOR_RESET}"
-    echo -e "29\tGPIOA20/PCM0_DOUT\t\t\t\t\t30\tGND"
-    echo -e "31\tGPIOA21/PCM0_DIN\t\t\t\t\t32\tGPIOA7"
-    echo -e "33\tGPIOA8\t\t\t\t\t\t\t34\tGND"
-    echo -e "35\tUART3_CTS/SPI1_MISO/GPIOA16\t\t\t\t36\tUART3_TX/SPI1_CS/GPIOA13"
-    echo -e "37\tGPIOA9\t\t\t\t\t\t\t38\tUART3_RTS/SPI1_MOSI/GPIOA15"
-    echo -e "39\tGND\t\t\t\t\t\t\t40\tUART3_RX/SPI1_CLK/GPIOA14"
+    printf "${COLOR_VDD}1\tSYS_3.3V\t\t\t\t\t\t${COLOR_VDD}2\tVDD_5V${COLOR_RESET}\n"
+    printf "${COLOR_I2C}3\tI2C0_SDA/GPIOA12\t\t\t\t\t4\tVDD_5V${COLOR_RESET}\n"
+    printf "5\tI2C0_SCL/GPIOA11\t\t\t\t\t6\tGND\n"
+    printf "7\tGPIOG11\t\t\t\t\t\t8\t${COLOR_UART}UART1_TX/GPIOG6${COLOR_RESET}\n"
+    printf "9\tGND\t\t\t\t\t\t\t10\t${COLOR_UART}UART1_RX/GPIOG7${COLOR_RESET}\n"
+    printf "${COLOR_UART}11\tUART2_TX/GPIOA0\t\t\t\t\t12\tGPIOA6${COLOR_RESET}\n"
+    printf "13\tUART2_RTS/GPIOA2\t\t\t\t\t14\tGND\n"
+    printf "15\tUART2_CTS/GPIOA3\t\t\t\t\t16\tUART1_RTS/GPIOG8\n"
+    printf "17\tSYS_3.3V\t\t\t\t\t\t18\tUART1_CTS/GPIOG9\n"
+    printf "19\t${COLOR_GPIO}SPI0_MOSI/GPIOC0${COLOR_RESET}\t\t\t20\tGND\n"
+    printf "21\t${COLOR_GPIO}SPI0_MISO/GPIOC1${COLOR_RESET}\t\t\t22\t${COLOR_UART}UART2_RX/GPIOA1${COLOR_RESET}\n"
+    printf "23\t${COLOR_GPIO}SPI0_CLK/GPIOC2${COLOR_RESET}\t\t\t24\t${COLOR_GPIO}SPI0_CS/GPIOC3${COLOR_RESET}\n"
+    printf "25\tGND\t\t\t\t\t\t\t26\tSPDIF-OUT/GPIOA17\n"
+    printf "27\t${COLOR_I2C}I2C1_SDA/GPIOA19${COLOR_RESET}\t\t\t28\t${COLOR_I2C}I2C1_SCL/GPIOA18${COLOR_RESET}\n"
+    printf "29\tGPIOA20/PCM0_DOUT\t\t\t\t\t30\tGND\n"
+    printf "31\tGPIOA21/PCM0_DIN\t\t\t\t\t32\tGPIOA7\n"
+    printf "33\tGPIOA8\t\t\t\t\t\t\t34\tGND\n"
+    printf "35\tUART3_CTS/SPI1_MISO/GPIOA16\t\t\t\t36\tUART3_TX/SPI1_CS/GPIOA13\n"
+    printf "37\tGPIOA9\t\t\t\t\t\t\t38\tUART3_RTS/SPI1_MOSI/GPIOA15\n"
+    printf "39\tGND\t\t\t\t\t\t\t40\tUART3_RX/SPI1_CLK/GPIOA14\n"
     
     echo -e "=====================================================\n"
 }
@@ -123,7 +123,6 @@ show_menu() {
     echo "|  6 | [$(if grep -q "uart3" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | UART3 (TX: GPIOA16[35], RX: GPIOA14[40])   |"
     echo "|  7 | [$(if grep -q "spi0" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | SPI0 (MOSI: GPIOC0[19], MISO: GPIOC1[21])  |"
     echo "|  8 | Display GPIO Pinout                     |"
-    echo "-------------------------------------------"
     echo "|  9 | Exit                                     |"
     echo "-------------------------------------------"
 }
