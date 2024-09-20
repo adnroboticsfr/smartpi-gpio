@@ -1,6 +1,18 @@
-#!/bin/bash 
+#!/bin/bash
 
 ARMBIAN_ENV="/boot/armbianEnv.txt"
+BACKUP_ENV="/boot/armbianEnv_backup.txt"
+
+# Function to create a backup of armbianEnv.txt
+backup_armbian_env() {
+    cp "$ARMBIAN_ENV" "$BACKUP_ENV"
+    echo "Backup of armbianEnv.txt created at $BACKUP_ENV"
+}
+
+# Function to validate user input
+validate_input() {
+    [[ $1 =~ ^[1-8]$ ]]
+}
 
 # Function to add an overlay if it is not already present
 add_overlay_if_missing() {
@@ -18,80 +30,92 @@ add_overlay_if_missing() {
     fi
 }
 
-# Function to check if an overlay is already present
-is_overlay_present() {
+# Function to remove an overlay
+remove_overlay() {
     local overlay="$1"
-    grep -q "$overlay" "$ARMBIAN_ENV"
+    if grep -q "^overlays=" "$ARMBIAN_ENV"; then
+        sed -i "/^overlays=/ s/ $overlay//" "$ARMBIAN_ENV"
+        echo "$overlay removed from the overlays line"
+    else
+        echo "No overlays line found."
+    fi
 }
 
-# Function to display the menu with checkboxes
+# Function to display the menu
 show_menu() {
-    clear  # Clear the screen before showing the menu
+    clear
     echo "=== Enable Features Menu ==="
-    echo "Select options to enable (default options are checked):"
-    
-    local options=(
-        "1) I2C1 - Inter-Integrated Circuit Bus 1 (Pins 27/28)"
-        "2) I2C2 - Inter-Integrated Circuit Bus 2 (Pins not specified)"
-        "3) PWM - Pulse Width Modulation (Check specific pins on your board)"
-        "4) UART1 - Universal Asynchronous Receiver-Transmitter (Pins 7/8)"
-        "5) UART2 - Universal Asynchronous Receiver-Transmitter (Pins 11/12)"
-        "6) UART3 - Universal Asynchronous Receiver-Transmitter (Pins 37/38)"
-        "7) SPI0 - Serial Peripheral Interface (Pins 19/20/21/22)"
-        "8) Configuration Options"
-        "9) Exit"
-    )
-
-    for option in "${options[@]}"; do
-        echo -n "$option "
-        case $option in
-            *I2C1*) if is_overlay_present "i2c1"; then echo "[x]"; else echo "[ ]"; fi ;;
-            *I2C2*) if is_overlay_present "i2c2"; then echo "[x]"; else echo "[ ]"; fi ;;
-            *PWM*) if is_overlay_present "pwm"; then echo "[x]"; else echo "[ ]"; fi ;;
-            *UART1*) if is_overlay_present "uart1"; then echo "[x]"; else echo "[ ]"; fi ;;
-            *UART2*) if is_overlay_present "uart2"; then echo "[x]"; else echo "[ ]"; fi ;;
-            *UART3*) if is_overlay_present "uart3"; then echo "[x]"; else echo "[ ]"; fi ;;
-            *SPI0*) if is_overlay_present "spi0"; then echo "[x]"; else echo "[ ]"; fi ;;
-        esac
-    done
-}
-
-# Function to configure parameters for overlays
-configure_parameters() {
-    echo "Configuration Options:"
-    read -p "Enter I2C frequency (default 100000): " i2c_freq
-    read -p "Enter UART1 baud rate (default 115200): " uart1_baud
-    read -p "Enter UART2 baud rate (default 115200): " uart2_baud
-    read -p "Enter UART3 baud rate (default 115200): " uart3_baud
-
-    # You can handle the parameters here (e.g., write to a config file or modify overlays)
-    echo "Configured I2C frequency: ${i2c_freq:-100000}"
-    echo "Configured UART1 baud rate: ${uart1_baud:-115200}"
-    echo "Configured UART2 baud rate: ${uart2_baud:-115200}"
-    echo "Configured UART3 baud rate: ${uart3_baud:-115200}"
+    echo "-------------------------------------------"
+    echo "| No | Status | Feature                             |"
+    echo "-------------------------------------------"
+    echo "|  1 | [X]    | I2C1 - Inter-Integrated Circuit Bus 1 (Pins 27/28) |"
+    echo "|  2 | [ ]    | I2C2 - Inter-Integrated Circuit Bus 2 (Pins not specified) |"
+    echo "|  3 | [ ]    | PWM - Pulse Width Modulation          |"
+    echo "|  4 | [X]    | UART1 - Universal Asynchronous Receiver-Transmitter (Pins 7/8) |"
+    echo "|  5 | [X]    | UART2 - Universal Asynchronous Receiver-Transmitter (Pins 11/12) |"
+    echo "|  6 | [ ]    | UART3 - Universal Asynchronous Receiver-Transmitter (Pins 37/38) |"
+    echo "|  7 | [ ]    | SPI0 - Serial Peripheral Interface (Pins 19/20/21/22) |"
+    echo "-------------------------------------------"
+    echo "|  8 | Exit                                     |"
+    echo "-------------------------------------------"
 }
 
 # Main loop to show the menu and process choices
 while true; do
     show_menu
-    read -p "Enter your choice (1-9): " choice
+    read -p "Enter your choice (1-8): " choice
+
+    if ! validate_input "$choice"; then
+        echo "Invalid option. Please try again."
+        continue
+    fi
+
     case $choice in
         1) add_overlay_if_missing "i2c1";;
-        2) add_overlay_if_missing "i2c2";;
-        3) add_overlay_if_missing "pwm";;
+        2) 
+            if grep -q "^overlays=" "$ARMBIAN_ENV"; then
+                if ! grep -q "i2c2" "$ARMBIAN_ENV"; then
+                    add_overlay_if_missing "i2c2"
+                else
+                    remove_overlay "i2c2"
+                fi
+            else
+                add_overlay_if_missing "i2c2"
+            fi
+            ;;
+        3) 
+            if grep -q "^overlays=" "$ARMBIAN_ENV"; then
+                if ! grep -q "pwm" "$ARMBIAN_ENV"; then
+                    add_overlay_if_missing "pwm"
+                else
+                    remove_overlay "pwm"
+                fi
+            else
+                add_overlay_if_missing "pwm"
+            fi
+            ;;
         4) add_overlay_if_missing "uart1";;
         5) add_overlay_if_missing "uart2";;
-        6) add_overlay_if_missing "uart3";;
+        6) 
+            if grep -q "^overlays=" "$ARMBIAN_ENV"; then
+                if ! grep -q "uart3" "$ARMBIAN_ENV"; then
+                    add_overlay_if_missing "uart3"
+                else
+                    remove_overlay "uart3"
+                fi
+            else
+                add_overlay_if_missing "uart3"
+            fi
+            ;;
         7) add_overlay_if_missing "spi0";;
-        8) configure_parameters;;
-        9) break;;
-        *) echo "Invalid option. Please try again.";;
+        8) break;;
     esac
 done
 
 # Prompt for reboot
 echo "System will reboot in 10 seconds to apply changes..."
 echo "Press any key to cancel the reboot."
+backup_armbian_env
 sleep 10 & wait $!
 if [ $? -eq 0 ]; then
     echo "Reboot canceled."
