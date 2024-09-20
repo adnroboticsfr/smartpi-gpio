@@ -191,7 +191,7 @@ done
 echo -e "\033[34mChanges made to overlays:\033[0m"
 grep "^overlays=" "$ARMBIAN_ENV"
 
-# Prompt for reboot with animated points
+
 echo -e "\033[33mSystem will reboot in a moment to apply changes...\033[0m"
 echo "Press any key to cancel the reboot."
 backup_armbian_env
