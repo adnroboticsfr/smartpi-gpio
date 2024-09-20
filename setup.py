@@ -1,6 +1,7 @@
 from setuptools import setup, find_packages
 from setuptools.command.install import install
 import subprocess
+import os
 
 class PostInstallCommand(install):
     """Post-installation script to execute activate_interfaces.sh."""
