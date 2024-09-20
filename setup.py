@@ -4,22 +4,22 @@ import subprocess
 import os
 
 class PostInstallCommand(install):
-    """Commande post-installation pour exécuter le script activate_interfaces.sh après l'installation."""
+    """Post-installation script to execute activate_interfaces.sh directly from bin/."""
     def run(self):
-        install.run(self)  # Exécuter le processus d'installation standard
+        install.run(self)  # Run the standard installation process
         try:
-            # Chemin vers le script dans /usr/local/bin après qu'il a été copié
-            script_dest = '/usr/local/bin/activate_interfaces.sh'
+            # Chemin vers le script dans le dossier bin/ après l'installation
+            script_path = os.path.join(os.path.dirname(__file__), 'bin/activate_interfaces.sh')
 
-            # Vérifier que le script a bien été copié
-            if os.path.exists(script_dest):
+            # Vérifier que le script existe dans le dossier bin/
+            if os.path.exists(script_path):
                 # Rendre le script exécutable
-                subprocess.run(['chmod', '+x', script_dest], check=True)
+                subprocess.run(['chmod', '+x', script_path], check=True)
 
                 # Exécuter le script
-                subprocess.run(['sudo', 'bash', script_dest], check=True)
+                subprocess.run(['bash', script_path], check=True)
             else:
-                print(f"Erreur : Le fichier {script_dest} est introuvable.")
+                print(f"Erreur : Le fichier {script_path} est introuvable.")
         except subprocess.CalledProcessError as e:
             print(f"Erreur lors de l'exécution du script post-installation : {e}")
 
@@ -29,8 +29,7 @@ setup(
     description="Gestion des GPIO pour Smart Pi One",
     author="ADNroboticsfr",
     packages=find_packages(),
-    scripts=['bin/gpio'],  # Ne pas inclure activate_interfaces.sh ici
-    data_files=[('/usr/local/bin', ['bin/activate_interfaces.sh'])],  # Copie le script dans /usr/local/bin
+    scripts=['bin/gpio'],  # Le script gpio sera copié dans /usr/local/bin
     install_requires=[
         'Flask>=2.0.0',
         'Pillow>=8.0.0',
