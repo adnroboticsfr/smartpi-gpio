@@ -1,17 +1,18 @@
 from setuptools import setup, find_packages
 from setuptools.command.install import install
 import subprocess
-import os
 
 class PostInstallCommand(install):
-    """Post-installation script to execute activate_interfaces.sh directly from bin/."""
+    """Post-installation script to execute activate_interfaces.sh."""
     def run(self):
         install.run(self)  # Run the standard installation process
         try:
-            # Chemin vers le script dans le dossier bin/ après l'installation
-            script_path = os.path.join(os.path.dirname(__file__), 'bin/activate_interfaces.sh')
+            # Chemin direct du script dans le dossier bin/
+            script_path = 'bin/activate_interfaces.sh'
 
-            # Vérifier que le script existe dans le dossier bin/
+            print(f"Chemin du script : {script_path}")
+
+            # Vérifier que le script existe
             if os.path.exists(script_path):
                 # Rendre le script exécutable
                 subprocess.run(['chmod', '+x', script_path], check=True)
@@ -29,7 +30,7 @@ setup(
     description="Gestion des GPIO pour Smart Pi One",
     author="ADNroboticsfr",
     packages=find_packages(),
-    scripts=['bin/gpio'],  # Le script gpio sera copié dans /usr/local/bin
+    scripts=['bin/gpio'],  # Inclure seulement le script gpio
     install_requires=[
         'Flask>=2.0.0',
         'Pillow>=8.0.0',
