@@ -174,7 +174,6 @@ while true; do
     esac
 done
 
-# Show changes before reboot
 echo -e "\033[34mChanges made to overlays:\033[0m"
 grep "^overlays=" "$ARMBIAN_ENV"
 
