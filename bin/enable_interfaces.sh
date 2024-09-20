@@ -42,6 +42,7 @@ remove_overlay() {
 
     # Remove associated configurations
     remove_uart_configuration "$overlay"
+    remove_spi_configuration "$overlay"
 }
 
 # Function to remove UART baud rate configuration
@@ -54,6 +55,24 @@ remove_uart_configuration() {
     # Remove lines corresponding to the specified UART baud rate
     while IFS= read -r line; do
         if [[ "$line" != "${uart}_baud="* ]]; then
+            echo "$line" >> "$temp_file"
+        fi
+    done < "$ARMBIAN_ENV"
+    
+    # Move temp file to original file
+    mv "$temp_file" "$ARMBIAN_ENV"
+}
+
+# Function to remove SPI frequency configuration
+remove_spi_configuration() {
+    local spi="$1"
+    
+    # Create a temporary file
+    local temp_file=$(mktemp)
+
+    # Remove lines corresponding to the specified SPI frequency
+    while IFS= read -r line; do
+        if [[ "$line" != "spi0_freq="* ]]; then
             echo "$line" >> "$temp_file"
         fi
     done < "$ARMBIAN_ENV"
@@ -191,7 +210,7 @@ while true; do
                 remove_overlay "spi0"
             else
                 add_overlay_if_missing "spi0"
-                configure_spi_frequency
+                configure_spi_frequency "spi0"
             fi
             ;;
         8) break;;
