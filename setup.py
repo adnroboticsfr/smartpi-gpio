@@ -4,34 +4,47 @@ import subprocess
 import os
 
 class PostInstallCommand(install):
-    """Post-installation script to execute activate_interfaces.sh."""
+    """Post-installation script to execute activate_interfaces.sh and enable_features.sh."""
     def run(self):
         install.run(self)  # Run the standard installation process
         try:
-            # Chemin direct du script dans le dossier bin/
-            script_path = 'bin/activate_interfaces.sh'
+            # Paths to the scripts in the bin/ directory
+            activate_script_path = 'bin/activate_interfaces.sh'
+            enable_script_path = 'bin/enable_interfaces.sh'
 
-            print(f"Chemin du script : {script_path}")
+            print(f"Script path for activation: {activate_script_path}")
+            print(f"Script path for enabling features: {enable_script_path}")
 
-            # Vérifier que le script existe
-            if os.path.exists(script_path):
-                # Rendre le script exécutable
-                subprocess.run(['chmod', '+x', script_path], check=True)
+            # Check if activate_interfaces.sh exists
+            if os.path.exists(activate_script_path):
+                # Make the script executable
+                subprocess.run(['chmod', '+x', activate_script_path], check=True)
 
-                # Exécuter le script
-                subprocess.run(['bash', script_path], check=True)
+                # Execute the script
+                #subprocess.run(['bash', activate_script_path], check=True)
+            #else:
+                #print(f"Error: The file {activate_script_path} is not found.")
+
+            # Check if enable_features.sh exists
+            if os.path.exists(enable_script_path):
+                # Make the script executable
+                subprocess.run(['chmod', '+x', enable_script_path], check=True)
+
+                # Execute the script
+                subprocess.run(['bash', enable_script_path], check=True)
             else:
-                print(f"Erreur : Le fichier {script_path} est introuvable.")
+                print(f"Error: The file {enable_script_path} is not found.")
+
         except subprocess.CalledProcessError as e:
-            print(f"Erreur lors de l'exécution du script post-installation : {e}")
+            print(f"Error executing the post-installation script: {e}")
 
 setup(
     name="smartpi-gpio",
     version="1.0.0",
-    description="Gestion des GPIO pour Smart Pi One",
+    description="GPIO management for Smart Pi One",
     author="ADNroboticsfr",
     packages=find_packages(),
-    scripts=['bin/gpio'],  # Inclure seulement le script gpio
+    scripts=['bin/gpio'],  # Include only the gpio script
     install_requires=[
         'Flask>=2.0.0',
         'Pillow>=8.0.0',

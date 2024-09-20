@@ -1,31 +1,33 @@
-#!/bin/bash
+#!/bin/bash 
 
-# Fichier de configuration
 ARMBIAN_ENV="/boot/armbianEnv.txt"
 
-# Fonction pour ajouter une interface si elle n'existe pas dans 'overlays='
 add_overlay_if_missing() {
     local overlay="$1"
     if grep -q "^overlays=" "$ARMBIAN_ENV"; then
         if ! grep -q "$overlay" "$ARMBIAN_ENV"; then
             sed -i "/^overlays=/ s/$/ $overlay/" "$ARMBIAN_ENV"
-            echo "$overlay ajouté à la ligne overlays"
+            echo "$overlay added to the overlays line"
         else
-            echo "$overlay déjà présent dans la ligne overlays"
+            echo "$overlay already present in the overlays line"  
         fi
     else
         echo "overlays=$overlay" >> "$ARMBIAN_ENV"
-        echo "Ligne overlays créée avec $overlay"
+        echo "overlays line created with $overlay"
     fi
 }
 
-# Ajouter I2C1 et I2C2 si nécessaire
 add_overlay_if_missing "i2c1"
 add_overlay_if_missing "i2c2"
-
-# Ajouter PWM si nécessaire
 add_overlay_if_missing "pwm"
 
-# Redémarrer pour appliquer les changements
-echo "Redémarrage du système pour appliquer les changements..."
-reboot
+# Prompt for reboot
+echo "System will reboot in 10 seconds to apply changes..."
+echo "Press any key to cancel the reboot."
+sleep 10 & wait $!
+if [ $? -eq 0 ]; then
+    echo "Reboot canceled."
+else
+    echo "Rebooting now to apply changes..."
+    reboot
+fi
