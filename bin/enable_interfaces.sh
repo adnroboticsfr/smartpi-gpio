@@ -62,17 +62,16 @@ configure_uart_baud_rate() {
     fi
 }
 
-# Function to display the GPIO pin table
 display_gpio_table() {
     echo -e "\n==================== GPIO Pinout ====================\n"
-    echo -e " Odd Pins\t\t\t\tEven Pins"
+    echo -e " Odd Pins\t\t\t\t\t\tEven Pins"
     echo -e "====================================================="
     
     # Odd pins
     printf "${COLOR_VDD}1\tSYS_3.3V\t\t\t\t\t\t${COLOR_VDD}2\tVDD_5V${COLOR_RESET}\n"
     printf "${COLOR_I2C}3\tI2C0_SDA/GPIOA12\t\t\t\t\t4\tVDD_5V${COLOR_RESET}\n"
     printf "5\tI2C0_SCL/GPIOA11\t\t\t\t\t6\tGND\n"
-    printf "7\tGPIOG11\t\t\t\t\t\t8\t${COLOR_UART}UART1_TX/GPIOG6${COLOR_RESET}\n"
+    printf "7\tGPIOG11\t\t\t\t\t\t\t8\t${COLOR_UART}UART1_TX/GPIOG6${COLOR_RESET}\n"
     printf "9\tGND\t\t\t\t\t\t\t10\t${COLOR_UART}UART1_RX/GPIOG7${COLOR_RESET}\n"
     printf "${COLOR_UART}11\tUART2_TX/GPIOA0\t\t\t\t\t12\tGPIOA6${COLOR_RESET}\n"
     printf "13\tUART2_RTS/GPIOA2\t\t\t\t\t14\tGND\n"
@@ -92,6 +91,8 @@ display_gpio_table() {
     
     echo -e "=====================================================\n"
 }
+
+
 
 # Function to show the dashboard
 show_dashboard() {
