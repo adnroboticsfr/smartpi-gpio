@@ -177,9 +177,10 @@ show_menu() {
 
 # Main loop to show the menu and process choices
 while true; do
-    display_pin_config
     show_dashboard
     show_menu
+    display_pin_config
+
     read -p "Enter your choice (1-8): " choice
 
     if ! validate_input "$choice"; then
