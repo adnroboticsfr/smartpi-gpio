@@ -47,9 +47,17 @@ configure_uart_baud_rate() {
     local default_baud=115200
     local baud_rate
 
-    # Prompt user for baud rate
-    read -p "Enter baud rate for $uart (press Enter to keep default $default_baud): " new_baud_rate
-    baud_rate=${new_baud_rate:-$default_baud}
+    # Check if a baud rate is already set
+    if grep -q "^${uart}_baud=" "$ARMBIAN_ENV"; then
+        baud_rate=$(grep "^${uart}_baud=" "$ARMBIAN_ENV" | cut -d'=' -f2)
+        echo -e "\033[33mCurrent baud rate for $uart is $baud_rate (default is $default_baud)\033[0m"
+    else
+        baud_rate=$default_baud
+    fi
+
+    # Prompt user for new baud rate
+    read -p "Enter new baud rate for $uart (press Enter to keep $baud_rate): " new_baud_rate
+    baud_rate=${new_baud_rate:-$baud_rate}
 
     # Update the baud rate configuration
     if grep -q "^${uart}_baud=" "$ARMBIAN_ENV"; then
