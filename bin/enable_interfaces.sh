@@ -1,3 +1,4 @@
+
 #!/bin/bash
 
 ARMBIAN_ENV="/boot/armbianEnv.txt"
@@ -57,21 +58,15 @@ remove_overlay() {
 # Function to remove SPI frequency configuration
 remove_spi_configuration() {
     local spi="$1"
-    if grep -q "^${spi}_freq=" "$ARMBIAN_ENV"; then
-        sed -i "/^${spi}_freq=/d" "$ARMBIAN_ENV"
-        echo -e "\033[31m${spi}_freq configuration removed from $ARMBIAN_ENV\033[0m"
-    fi
+    sed -i "/^${spi}_freq=/d" "$ARMBIAN_ENV"
+    echo -e "\033[31m${spi}_freq configuration removed from $ARMBIAN_ENV\033[0m"
 }
 
 # Function to remove UART baud rate configuration
 remove_uart_configuration() {
     local uart="$1"
-    if grep -q "^${uart}_baud=" "$ARMBIAN_ENV"; then
-        sed -i "/^${uart}_baud=/d" "$ARMBIAN_ENV"
-        echo -e "\033[31m${uart}_baud configuration removed from $ARMBIAN_ENV\033[0m"
-    else
-        echo -e "\033[33mNo baud rate configuration found for $uart\033[0m"
-    fi
+    sed -i "/^${uart}_baud=/d" "$ARMBIAN_ENV"
+    echo -e "\033[31m${uart}_baud configuration removed from $ARMBIAN_ENV\033[0m"
 }
 
 # Function to configure UART baud rate
