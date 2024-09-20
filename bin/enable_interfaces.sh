@@ -113,7 +113,7 @@ show_menu() {
     clear
     echo ""
     echo "-------------------------------------------------------------------"
-    echo "|      === Enable/Disable Interfaces Menu ===                     |"
+    echo "|           === Enable/Disable Interfaces Menu ===                |"
     echo "-------------------------------------------------------------------"
     echo ""
     echo "Please select options to enable or disable, and choose an interface "
