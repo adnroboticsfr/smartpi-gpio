@@ -113,9 +113,9 @@ show_menu() {
     clear
     echo "=== Enable/Disable Interfaces Menu ==="
     echo "Please select options to enable or disable:"
-    echo "-------------------------------------------"
-    echo "| No | Status | Feature                             |"
-    echo "-------------------------------------------"
+    echo "----------------------------------------------------------"
+    echo "| No | Status | Feature                                   |"
+    echo "----------------------------------------------------------"
     echo "|  1 | [$(if grep -q "i2c1" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | I2C1 (SDA: GPIOA19[27], SCL: GPIOA18[28])  |"
     echo "|  2 | [$(if grep -q "i2c2" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | I2C2 (SDA: GPIOA12[3], SCL: GPIOA11[4])  |"
     echo "|  3 | [$(if grep -q "pwm" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | PWM (GPIO à déclarer)              |"
@@ -123,9 +123,10 @@ show_menu() {
     echo "|  5 | [$(if grep -q "uart2" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | UART2 (TX: GPIOA0[11], RX: GPIOA1[22])     |"
     echo "|  6 | [$(if grep -q "uart3" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | UART3 (TX: GPIOA16[35], RX: GPIOA14[40])   |"
     echo "|  7 | [$(if grep -q "spi0" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | SPI0 (MOSI: GPIOC0[19], MISO: GPIOC1[21])  |"
-    echo "|  8 | Display GPIO Pinout                     |"
-    echo "|  9 | Exit                                     |"
-    echo "-------------------------------------------"
+    echo "----------------------------------------------------------"
+    echo "|  8 | Display GPIO Pinout                               |"
+    echo "|  9 | Exit                                              |"
+    echo "----------------------------------------------------------"
 }
 
 # Main loop to show the menu and process choices

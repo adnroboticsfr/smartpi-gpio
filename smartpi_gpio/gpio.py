@@ -14,7 +14,7 @@ class InvalidPinError(Exception):
 class GPIO:
     def __init__(self, mode=PinMode.BOARD):  # Default to BOARD mode
         self.mode = mode  # Store the pin numbering mode (BOARD or BCM)
-        print(f"Pin numbering mode: {self.mode}")
+        #print(f"Pin numbering mode: {self.mode}")
     
     def _validate_pin(self, pin_number):
         if not Pins.is_valid_pin(self.mode, pin_number):
