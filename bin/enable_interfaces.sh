@@ -63,6 +63,11 @@ configure_uart_baud_rate() {
 }
 
 display_gpio_table() {
+    COLOR_I2C="\033[32m"
+    COLOR_UART="\033[34m"
+    COLOR_VDD="\033[33m"
+    COLOR_GPIO="\033[35m"
+    COLOR_RESET="\033[0m"
     echo -e "\n======================--[ GPIO Pinout - SMART PI ONE ]--======================\n"
     echo -e "              Name          \t     Pins               Name"
     echo -e "=============================================================================="
