@@ -109,7 +109,7 @@ class GPIO:
                 return f"{Fore.GREEN}{text}{Style.RESET_ALL}"
             return text
 
-        header = f"| {'LINUX gpio':^{width}} | {'Name':^{width}} | {'Board':^{width}} | {'Board':^{width}} | {'Name':^{width}} | {'LINUX gpio':^{width}} |"
+        header = f"| {'LINUX gpio':^{width}} | {'Name':^{width}} | {'Board(PIN)':^{width}} | {'Board(PIN)':^{width}} | {'Name':^{width}} | {'LINUX gpio':^{width}} |"
         
         print("")
         print("-" * len(header))
