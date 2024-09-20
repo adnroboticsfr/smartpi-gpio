@@ -21,12 +21,15 @@ add_overlay_if_missing() {
         if ! grep -q "$overlay" "$ARMBIAN_ENV"; then
             sed -i "/^overlays=/ s/$/ $overlay/" "$ARMBIAN_ENV"
             echo -e "\033[32m$overlay added to the overlays line\033[0m"
+            sleep 3
         else
             echo -e "\033[33m$overlay is already present in the overlays line\033[0m"
+            sleep 3
         fi
     else
         echo "overlays=$overlay" >> "$ARMBIAN_ENV"
         echo -e "\033[32mOverlays line created with $overlay\033[0m"
+        sleep 3
     fi
 }
 
@@ -36,6 +39,7 @@ remove_overlay() {
     if grep -q "^overlays=" "$ARMBIAN_ENV"; then
         sed -i "/^overlays=/ s/ $overlay//" "$ARMBIAN_ENV"
         echo -e "\033[31m$overlay removed from the overlays line\033[0m"
+        sleep 3
     else
         echo "No overlays line found."
     fi
@@ -44,32 +48,38 @@ remove_overlay() {
 # Function to configure UART baud rate
 configure_uart_baud_rate() {
     local uart="$1"
-    read -p "Enter baud rate for $uart (default is 115200): " baud_rate
+    echo "Configuring baud rate for $uart."
+    read -p "Enter baud rate for $uart (default is 115200, or press Enter to keep): " baud_rate
     baud_rate=${baud_rate:-115200}
     
     # Update the baud rate configuration
     if grep -q "^${uart}_baud=" "$ARMBIAN_ENV"; then
         sed -i "/^${uart}_baud=/ s/= .*/= $baud_rate/" "$ARMBIAN_ENV"
         echo -e "\033[32m$uart baud rate updated to $baud_rate\033[0m"
+        sleep 3
     else
         echo "${uart}_baud=$baud_rate" >> "$ARMBIAN_ENV"
         echo -e "\033[32m${uart}_baud set to $baud_rate\033[0m"
+        sleep 3
     fi
 }
 
 # Function to configure SPI frequency
 configure_spi_frequency() {
     local spi="$1"
-    read -p "Enter frequency for $spi (default is 1MHz): " frequency
-    frequency=${frequency:-1000000}  # 1MHz by default
+    echo "Configuring frequency for $spi."
+    read -p "Enter frequency for $spi (default is 500000, or press Enter to keep): " frequency
+    frequency=${frequency:-500000}
     
     # Update the frequency configuration
-    if grep -q "^${spi}_frequency=" "$ARMBIAN_ENV"; then
-        sed -i "/^${spi}_frequency=/ s/= .*/= $frequency/" "$ARMBIAN_ENV"
+    if grep -q "^${spi}_freq=" "$ARMBIAN_ENV"; then
+        sed -i "/^${spi}_freq=/ s/= .*/= $frequency/" "$ARMBIAN_ENV"
         echo -e "\033[32m$spi frequency updated to $frequency\033[0m"
+        sleep 3
     else
-        echo "${spi}_frequency=$frequency" >> "$ARMBIAN_ENV"
-        echo -e "\033[32m${spi}_frequency set to $frequency\033[0m"
+        echo "${spi}_freq=$frequency" >> "$ARMBIAN_ENV"
+        echo -e "\033[32m${spi}_freq set to $frequency\033[0m"
+        sleep 3
     fi
 }
 
@@ -175,8 +185,6 @@ while true; do
             ;;
         8) break;;
     esac
-    # Pause for confirmation messages to be seen
-    sleep 3
 done
 
 # Show changes before reboot
