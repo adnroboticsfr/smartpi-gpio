@@ -88,7 +88,7 @@ display_gpio_table() {
     printf "\t     GPIOA9\t\t( 37 )\t( 38 )  ${COLOR_UART}UART3_RTS${COLOR_RESET}/${COLOR_GPIO}SPI1_MOSI${COLOR_RESET}/GPIOA15\n"
     printf "\t      ${COLOR_VDD}GND${COLOR_RESET}\t\t( 39 )\t( 40 )  ${COLOR_UART}UART3_RX${COLOR_RESET}/${COLOR_GPIO}SPI1_CLK${COLOR_RESET}/GPIOA14\n"
     
-    echo -e "==============================================================================\n"
+    echo -e "=============================================================================\n"
 }
 
 
