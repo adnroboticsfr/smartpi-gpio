@@ -49,14 +49,14 @@ declare -A pins=(
 
 # Function to display pin configuration
 display_pin_config() {
-    echo "=== Pin Configuration ==="
-    echo "Pin# | Name                               | Linux GPIO"
+    echo "=== Configuration des Pins ==="
+    echo "Numéro | Nom                               | GPIO Linux"
     echo "------------------------------------------------------"
     for pin in {1..40}; do
-        printf "%-5s | %-35s | %s\n" "$pin" "${pins[$pin]}" "$(get_gpio $pin)"
+        printf "%-6s | %-35s | %s\n" "$pin" "${pins[$pin]}" "$(get_gpio $pin)"
     done
     echo "------------------------------------------------------"
-    echo "Exemples de composants:"
+    echo "Exemples de composants :"
     echo "- Capteur I2C connecté à I2C1_SDA (GPIOA19)"
     echo "- Module UART connecté à UART2_TX (GPIOA0)"
     echo "- Module SPI connecté à SPI0_MOSI (GPIOC0)"
