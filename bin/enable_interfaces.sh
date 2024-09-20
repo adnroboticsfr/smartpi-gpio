@@ -3,76 +3,6 @@
 ARMBIAN_ENV="/boot/armbianEnv.txt"
 BACKUP_ENV="/boot/armbianEnv_backup.txt"
 
-# Pin configuration table
-declare -A pins=(
-    [1]="SYS_3.3V"
-    [2]="VDD_5V"
-    [3]="I2C0_SDA/GPIOA12"
-    [4]="VDD_5V"
-    [5]="I2C0_SCL/GPIOA11"
-    [6]="GND"
-    [7]="GPIOG11"
-    [8]="UART1_TX/GPIOG6"
-    [9]="GND"
-    [10]="UART1_RX/GPIOG7"
-    [11]="UART2_TX/GPIOA0"
-    [12]="GPIOA6"
-    [13]="UART2_RTS/GPIOA2"
-    [14]="GND"
-    [15]="UART2_CTS/GPIOA3"
-    [16]="UART1_RTS/GPIOG8"
-    [17]="SYS_3.3V"
-    [18]="UART1_CTS/GPIOG9"
-    [19]="SPI0_MOSI/GPIOC0"
-    [20]="GND"
-    [21]="SPI0_MISO/GPIOC1"
-    [22]="UART2_RX/GPIOA1"
-    [23]="SPI0_CLK/GPIOC2"
-    [24]="SPI0_CS/GPIOC3"
-    [25]="GND"
-    [26]="SPDIF-OUT/GPIOA17"
-    [27]="I2C1_SDA/GPIOA19"
-    [28]="I2C1_SCL/GPIOA18"
-    [29]="GPIOA20"
-    [30]="GND"
-    [31]="GPIOA21"
-    [32]="GPIOA7"
-    [33]="GPIOA8"
-    [34]="GND"
-    [35]="UART3_CTS/SPI1_MISO/GPIOA16"
-    [36]="UART3_TX/SPI1_CS/GPIOA13"
-    [37]="GPIOA9"
-    [38]="UART3_RTS/SPI1_MOSI/GPIOA15"
-    [39]="GND"
-    [40]="UART3_RX/SPI1_CLK/GPIOA14"
-)
-
-# Function to get GPIO (mock function)
-get_gpio() {
-    # Logic to return GPIO, for now just return the pin number
-    echo "$1"
-}
-
-# Option 1: Function to display pin configuration in a formatted table
-display_pin_config() {
-    echo "=== Configuration des Pins ==="
-    printf "%-6s | %-30s\n" "Pin" "Fonction"
-    echo "----------------------------------------"
-    for pin in "${!pins[@]}"; do
-        printf "%-6s | %-30s\n" "$pin" "${pins[$pin]}"
-    done
-    echo "----------------------------------------"
-}
-
-# Option 2: Simple list format (uncomment if you prefer this)
-# display_pin_config() {
-#     echo "=== Configuration des Pins ==="
-#     for pin in "${!pins[@]}"; do
-#         echo "Pin $pin: ${pins[$pin]}"
-#     done
-#     echo "=============================="
-# }
-
 # Function to create a backup of armbianEnv.txt
 backup_armbian_env() {
     cp "$ARMBIAN_ENV" "$BACKUP_ENV"
@@ -84,7 +14,7 @@ validate_input() {
     [[ $1 =~ ^[1-8]$ ]]
 }
 
-# Function to add overlay if it is missing
+# Function to add an overlay if it is not already present
 add_overlay_if_missing() {
     local overlay="$1"
     if grep -q "^overlays=" "$ARMBIAN_ENV"; then
@@ -100,7 +30,7 @@ add_overlay_if_missing() {
     fi
 }
 
-# Function to remove overlay
+# Function to remove an overlay
 remove_overlay() {
     local overlay="$1"
     if grep -q "^overlays=" "$ARMBIAN_ENV"; then
@@ -114,32 +44,20 @@ remove_overlay() {
 # Function to configure UART baud rate
 configure_uart_baud_rate() {
     local uart="$1"
-    echo "Configuring baud rate for $uart."
-    read -p "Enter baud rate for $uart (default is 115200, or press Enter to keep): " baud_rate
-    baud_rate=${baud_rate:-115200}
-    
+    local default_baud=115200
+    local baud_rate
+
+    # Prompt user for baud rate
+    read -p "Enter baud rate for $uart (press Enter to keep default $default_baud): " new_baud_rate
+    baud_rate=${new_baud_rate:-$default_baud}
+
+    # Update the baud rate configuration
     if grep -q "^${uart}_baud=" "$ARMBIAN_ENV"; then
         sed -i "/^${uart}_baud=/ s/= .*/= $baud_rate/" "$ARMBIAN_ENV"
         echo -e "\033[32m$uart baud rate updated to $baud_rate\033[0m"
     else
         echo "${uart}_baud=$baud_rate" >> "$ARMBIAN_ENV"
         echo -e "\033[32m${uart}_baud set to $baud_rate\033[0m"
-    fi
-}
-
-# Function to configure SPI frequency
-configure_spi_frequency() {
-    local spi="$1"
-    echo "Configuring frequency for $spi."
-    read -p "Enter frequency for $spi (default is 500000, or press Enter to keep): " frequency
-    frequency=${frequency:-500000}
-    
-    if grep -q "^${spi}_freq=" "$ARMBIAN_ENV"; then
-        sed -i "/^${spi}_freq=/ s/= .*/= $frequency/" "$ARMBIAN_ENV"
-        echo -e "\033[32m$spi frequency updated to $frequency\033[0m"
-    else
-        echo "${spi}_freq=$frequency" >> "$ARMBIAN_ENV"
-        echo -e "\033[32m${spi}_freq set to $frequency\033[0m"
     fi
 }
 
@@ -161,7 +79,7 @@ show_dashboard() {
 show_menu() {
     clear
     echo "=== Enable/Disable Interfaces Menu ==="
-    echo "Enable/Disable une interface :"
+    echo "Please select options to enable or disable:"
     echo "-------------------------------------------"
     echo "| No | Status | Feature                             |"
     echo "-------------------------------------------"
@@ -179,7 +97,6 @@ show_menu() {
 
 # Main loop to show the menu and process choices
 while true; do
-    display_pin_config
     show_dashboard
     show_menu
     read -p "Enter your choice (1-8): " choice
@@ -194,6 +111,8 @@ while true; do
         1) 
             if grep -q "i2c1" "$ARMBIAN_ENV"; then
                 remove_overlay "i2c1"
+                sed -i "/^i2c1_baud=/d" "$ARMBIAN_ENV"  # Supprimer la configuration du baud rate si présente
+                echo -e "\033[31mI2C1 configuration removed.\033[0m"
             else
                 add_overlay_if_missing "i2c1"
             fi
@@ -201,6 +120,8 @@ while true; do
         2) 
             if grep -q "i2c2" "$ARMBIAN_ENV"; then
                 remove_overlay "i2c2"
+                sed -i "/^i2c2_baud=/d" "$ARMBIAN_ENV"  # Supprimer la configuration du baud rate si présente
+                echo -e "\033[31mI2C2 configuration removed.\033[0m"
             else
                 add_overlay_if_missing "i2c2"
             fi
@@ -215,6 +136,8 @@ while true; do
         4) 
             if grep -q "uart1" "$ARMBIAN_ENV"; then
                 remove_overlay "uart1"
+                sed -i "/^uart1_baud=/d" "$ARMBIAN_ENV"  # Supprimer la configuration du baud rate
+                echo -e "\033[31mUART1 configuration removed.\033[0m"
             else
                 add_overlay_if_missing "uart1"
                 configure_uart_baud_rate "uart1"
@@ -223,6 +146,8 @@ while true; do
         5) 
             if grep -q "uart2" "$ARMBIAN_ENV"; then
                 remove_overlay "uart2"
+                sed -i "/^uart2_baud=/d" "$ARMBIAN_ENV"  # Supprimer la configuration du baud rate
+                echo -e "\033[31mUART2 configuration removed.\033[0m"
             else
                 add_overlay_if_missing "uart2"
                 configure_uart_baud_rate "uart2"
@@ -231,6 +156,8 @@ while true; do
         6) 
             if grep -q "uart3" "$ARMBIAN_ENV"; then
                 remove_overlay "uart3"
+                sed -i "/^uart3_baud=/d" "$ARMBIAN_ENV"  # Supprimer la configuration du baud rate
+                echo -e "\033[31mUART3 configuration removed.\033[0m"
             else
                 add_overlay_if_missing "uart3"
                 configure_uart_baud_rate "uart3"
@@ -241,7 +168,6 @@ while true; do
                 remove_overlay "spi0"
             else
                 add_overlay_if_missing "spi0"
-                configure_spi_frequency "spi0"
             fi
             ;;
         8) break;;
@@ -253,15 +179,20 @@ echo -e "\033[34mChanges made to overlays:\033[0m"
 grep "^overlays=" "$ARMBIAN_ENV"
 
 # Prompt for reboot with animated points
+echo -e "\033[33mSystem will reboot in a moment to apply changes...\033[0m"
+echo "Press any key to cancel the reboot."
 backup_armbian_env
-echo "Press any key within 10 seconds to cancel the reboot."
-for i in $(seq 1 10); do
+
+while true; do
     echo -n "."
     sleep 1
     if read -t 0.1 -n 1; then
         echo -e "\n\033[31mReboot canceled.\033[0m"
-        exit 0
+        break
     fi
 done
-echo -e "\nRebooting now..."
-reboot
+
+if [ $? -eq 0 ]; then
+    echo "Rebooting now..."
+    reboot
+fi
