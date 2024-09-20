@@ -2,30 +2,36 @@ from setuptools import setup, find_packages
 from setuptools.command.install import install
 import subprocess
 import os
+import shutil
 
 class PostInstallCommand(install):
-    """Post-installation script execution for setting up interfaces."""
+    """Commande post-installation pour exécuter activate_interfaces.sh."""
     def run(self):
-        install.run(self)  # Run the default installation
+        install.run(self)  # Exécuter le processus d'installation standard
         try:
-            # Make sure the script is available in /usr/local/bin/ after installation
-            script_path = '/usr/local/bin/activate_interfaces.sh'
-            
-            # Ensure the script is executable
-            subprocess.run(['sudo', 'chmod', '+x', script_path], check=True)
+            # Chemin du script à copier
+            src_script = os.path.join(os.path.dirname(__file__), 'bin/activate_interfaces.sh')
+            dest_script = '/usr/local/bin/activate_interfaces.sh'
 
-            # Run the post-install script using sudo
-            subprocess.run(['sudo', 'bash', script_path], check=True)
-        except subprocess.CalledProcessError as e:
-            print(f"Error running post-installation script: {e}")
+            # Copier le script dans /usr/local/bin/
+            shutil.copy(src_script, dest_script)
+            print(f"Script copié dans {dest_script}")
+
+            # S'assurer que le script est exécutable
+            subprocess.run(['sudo', 'chmod', '+x', dest_script], check=True)
+
+            # Exécuter le script après installation
+            subprocess.run(['sudo', 'bash', dest_script], check=True)
+        except Exception as e:
+            print(f"Erreur lors de l'exécution du script post-installation : {e}")
 
 setup(
     name="smartpi-gpio",
     version="1.0.0",
-    description="GPIO management for Smart Pi One",
+    description="Gestion des GPIO pour Smart Pi One",
     author="ADNroboticsfr",
     packages=find_packages(),
-    scripts=['bin/gpio', 'bin/activate_interfaces.sh'],  # Make sure the script is included here
+    scripts=['bin/gpio'],  # Le script 'gpio' sera installé dans /usr/local/bin/
     install_requires=[
         'Flask>=2.0.0',
         'Pillow>=8.0.0',
