@@ -6,7 +6,7 @@ BACKUP_ENV="/boot/armbianEnv_backup.txt"
 # Function to create a backup of armbianEnv.txt
 backup_armbian_env() {
     cp "$ARMBIAN_ENV" "$BACKUP_ENV"
-    echo "Backup of armbianEnv.txt created at $BACKUP_ENV"
+    echo -e "\033[32mBackup of armbianEnv.txt created at $BACKUP_ENV\033[0m"
 }
 
 # Function to validate user input
@@ -20,13 +20,13 @@ add_overlay_if_missing() {
     if grep -q "^overlays=" "$ARMBIAN_ENV"; then
         if ! grep -q "$overlay" "$ARMBIAN_ENV"; then
             sed -i "/^overlays=/ s/$/ $overlay/" "$ARMBIAN_ENV"
-            echo "$overlay added to the overlays line"
+            echo -e "\033[32m$overlay added to the overlays line\033[0m"
         else
-            echo "$overlay already present in the overlays line"
+            echo -e "\033[33m$overlay is already present in the overlays line\033[0m"
         fi
     else
         echo "overlays=$overlay" >> "$ARMBIAN_ENV"
-        echo "overlays line created with $overlay"
+        echo -e "\033[32mOverlays line created with $overlay\033[0m"
     fi
 }
 
@@ -35,7 +35,7 @@ remove_overlay() {
     local overlay="$1"
     if grep -q "^overlays=" "$ARMBIAN_ENV"; then
         sed -i "/^overlays=/ s/ $overlay//" "$ARMBIAN_ENV"
-        echo "$overlay removed from the overlays line"
+        echo -e "\033[31m$overlay removed from the overlays line\033[0m"
     else
         echo "No overlays line found."
     fi
@@ -81,8 +81,8 @@ while true; do
     read -p "Enter your choice (1-8): " choice
 
     if ! validate_input "$choice"; then
-        echo "Invalid option. Please try again."
-        sleep 2
+        echo -e "\033[31mInvalid option. Please try again.\033[0m"
+        sleep 3
         continue
     fi
 
@@ -138,24 +138,28 @@ while true; do
             ;;
         8) break;;
     esac
+
+    echo "Press any key to continue..."
+    read -n 1 -s
 done
 
 # Show changes before reboot
-echo "Changes made to overlays:"
+echo -e "\033[34mChanges made to overlays:\033[0m"
 grep "^overlays=" "$ARMBIAN_ENV"
 
 # Prompt for reboot with countdown
-echo "System will reboot in 10 seconds to apply changes..."
+echo -e "\033[33mSystem will reboot in 10 seconds to apply changes...\033[0m"
 echo "Press any key to cancel the reboot."
 backup_armbian_env
 
 for i in {10..1}; do
-    echo "$i..."
+    echo -n "$i... "
     sleep 1
 done
+echo ""
 
 if read -t 1 -n 1; then
-    echo "Reboot canceled."
+    echo -e "\033[31mReboot canceled.\033[0m"
 else
     echo "Rebooting now to apply changes..."
     reboot
