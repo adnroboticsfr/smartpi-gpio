@@ -119,6 +119,7 @@ display_gpio_ports() {
     echo -e "\033[34m39\tGND\t\t\t\t\t-\033[0m"
     echo -e "\033[34m40\tUART3_RX/SPI1_CLK/GPIOA14\t14\t\033[0m"
     echo "----------------------------------------------------------"
+    read -p "Press any key to continue..."  # Attendre l'entrée de l'utilisateur
 }
 
 # Function to display the dashboard
