@@ -34,50 +34,26 @@ add_overlay_if_missing() {
 remove_overlay() {
     local overlay="$1"
     
-    # Remove the overlay from the overlays line
     if grep -q "^overlays=" "$ARMBIAN_ENV"; then
         sed -i "/^overlays=/ s/ $overlay//" "$ARMBIAN_ENV"
         echo -e "\033[31m$overlay removed from the overlays line\033[0m"
     fi
 
-    # Remove associated configurations
     remove_uart_configuration "$overlay"
-    remove_spi_configuration "$overlay"
 }
 
 # Function to remove UART baud rate configuration
 remove_uart_configuration() {
     local uart="$1"
     
-    # Create a temporary file
     local temp_file=$(mktemp)
 
-    # Remove lines corresponding to the specified UART baud rate
     while IFS= read -r line; do
         if [[ "$line" != "${uart}_baud="* ]]; then
             echo "$line" >> "$temp_file"
         fi
     done < "$ARMBIAN_ENV"
     
-    # Move temp file to original file
-    mv "$temp_file" "$ARMBIAN_ENV"
-}
-
-# Function to remove SPI frequency configuration
-remove_spi_configuration() {
-    local spi="$1"
-    
-    # Create a temporary file
-    local temp_file=$(mktemp)
-
-    # Remove lines corresponding to the specified SPI frequency
-    while IFS= read -r line; do
-        if [[ "$line" != "spi0_freq="* ]]; then
-            echo "$line" >> "$temp_file"
-        fi
-    done < "$ARMBIAN_ENV"
-    
-    # Move temp file to original file
     mv "$temp_file" "$ARMBIAN_ENV"
 }
 
@@ -88,7 +64,6 @@ configure_uart_baud_rate() {
     read -p "Enter baud rate for $uart (default is 115200, or press Enter to keep): " baud_rate
     baud_rate=${baud_rate:-115200}
     
-    # Update the baud rate configuration
     if grep -q "^${uart}_baud=" "$ARMBIAN_ENV"; then
         sed -i "/^${uart}_baud=/ s/= .*/= $baud_rate/" "$ARMBIAN_ENV"
         echo -e "\033[32m$uart baud rate updated to $baud_rate\033[0m"
@@ -98,20 +73,52 @@ configure_uart_baud_rate() {
     fi
 }
 
-# Function to configure SPI frequency
-configure_spi_frequency() {
-    echo "Configuring SPI0 frequency."
-    read -p "Enter SPI0 frequency (default is 500000, or press Enter to keep): " spi_freq
-    spi_freq=${spi_freq:-500000}
-    
-    # Update the frequency configuration
-    if grep -q "^spi0_freq=" "$ARMBIAN_ENV"; then
-        sed -i "/^spi0_freq=/ s/= .*/= $spi_freq/" "$ARMBIAN_ENV"
-        echo -e "\033[32mSPI0 frequency updated to $spi_freq\033[0m"
-    else
-        echo "spi0_freq=$spi_freq" >> "$ARMBIAN_ENV"
-        echo -e "\033[32mSPI0 frequency set to $spi_freq\033[0m"
-    fi
+# Function to display GPIO ports and their numbers
+display_gpio_ports() {
+    echo -e "\033[36m=== GPIO Ports ===\033[0m"
+    echo -e "\033[32mPin#\tName\t\t\t\tLinux GPIO\033[0m"
+    echo "----------------------------------------------------------"
+    echo -e "\033[34m1\tSYS_3.3V\t\t\t\t-\033[0m"
+    echo -e "\033[34m2\tVDD_5V\t\t\t\t\t-\033[0m"
+    echo -e "\033[34m3\tI2C0_SDA/GPIOA12\t\t\t-\033[0m"
+    echo -e "\033[34m4\tVDD_5V\t\t\t\t\t-\033[0m"
+    echo -e "\033[34m5\tI2C0_SCL/GPIOA11\t\t\t-\033[0m"
+    echo -e "\033[34m6\tGND\t\t\t\t\t-\033[0m"
+    echo -e "\033[34m7\tGPIOG11\t\t\t203\t\033[0m"
+    echo -e "\033[34m8\tUART1_TX/GPIOG6\t\t198\t\033[0m"
+    echo -e "\033[34m9\tGND\t\t\t\t\t-\033[0m"
+    echo -e "\033[34m10\tUART1_RX/GPIOG7\t\t199\t\033[0m"
+    echo -e "\033[34m11\tUART2_TX/GPIOA0\t\t0\t\033[0m"
+    echo -e "\033[34m12\tGPIOA6\t\t\t6\t\033[0m"
+    echo -e "\033[34m13\tUART2_RTS/GPIOA2\t\t2\t\033[0m"
+    echo -e "\033[34m14\tGND\t\t\t\t\t-\033[0m"
+    echo -e "\033[34m15\tUART2_CTS/GPIOA3\t\t3\t\033[0m"
+    echo -e "\033[34m16\tUART1_RTS/GPIOG8\t\t200\t\033[0m"
+    echo -e "\033[34m17\tSYS_3.3V\t\t\t\t-\033[0m"
+    echo -e "\033[34m18\tUART1_CTS/GPIOG9\t\t201\t\033[0m"
+    echo -e "\033[34m19\tSPI0_MOSI/GPIOC0\t\t64\t\033[0m"
+    echo -e "\033[34m20\tGND\t\t\t\t\t-\033[0m"
+    echo -e "\033[34m21\tSPI0_MISO/GPIOC1\t\t65\t\033[0m"
+    echo -e "\033[34m22\tUART2_RX/GPIOA1\t\t1\t\033[0m"
+    echo -e "\033[34m23\tSPI0_CLK/GPIOC2\t\t66\t\033[0m"
+    echo -e "\033[34m24\tSPI0_CS/GPIOC3\t\t67\t\033[0m"
+    echo -e "\033[34m25\tGND\t\t\t\t\t-\033[0m"
+    echo -e "\033[34m26\tSPDIF-OUT/GPIOA17\t\t17\t\033[0m"
+    echo -e "\033[34m27\tI2C1_SDA/GPIOA19\t\t19\t\033[0m"
+    echo -e "\033[34m28\tI2C1_SCL/GPIOA18\t\t18\t\033[0m"
+    echo -e "\033[34m29\tGPIOA20\t\t\t20\t\033[0m"
+    echo -e "\033[34m30\tGND\t\t\t\t\t-\033[0m"
+    echo -e "\033[34m31\tGPIOA21\t\t\t21\t\033[0m"
+    echo -e "\033[34m32\tGPIOA7\t\t\t7\t\033[0m"
+    echo -e "\033[34m33\tGPIOA8\t\t\t8\t\033[0m"
+    echo -e "\033[34m34\tGND\t\t\t\t\t-\033[0m"
+    echo -e "\033[34m35\tUART3_CTS/SPI1_MISO/GPIOA16\t16\t\033[0m"
+    echo -e "\033[34m36\tUART3_TX/SPI1_CS/GPIOA13\t13\t\033[0m"
+    echo -e "\033[34m37\tGPIOA9\t\t\t9\t\033[0m"
+    echo -e "\033[34m38\tUART3_RTS/SPI1_MOSI/GPIOA15\t15\t\033[0m"
+    echo -e "\033[34m39\tGND\t\t\t\t\t-\033[0m"
+    echo -e "\033[34m40\tUART3_RX/SPI1_CLK/GPIOA14\t14\t\033[0m"
+    echo "----------------------------------------------------------"
 }
 
 # Function to display the dashboard
@@ -151,6 +158,7 @@ show_menu() {
 # Main loop to show the menu and process choices
 while true; do
     show_dashboard
+    display_gpio_ports  # Afficher les ports GPIO
     show_menu
     read -p "Enter your choice (1-8): " choice
 
