@@ -63,14 +63,14 @@ configure_uart_baud_rate() {
 }
 
 display_gpio_table() {
-    echo -e "\n=============================    GPIO Pinout - SMART PI ONE   ====================================\n"
+    echo -e "\n===========================    GPIO Pinout - SMART PI ONE   =================================\n"
     echo -e "              Name          \t           Pins                      Name"
     echo -e "============================================================================================"
     
-    printf "\t${COLOR_VDD}    SYS_3.3V${COLOR_RESET}\t\t\t1\t2\t            ${COLOR_VDD}VDD_5V${COLOR_RESET}\n"
-    printf "\t${COLOR_I2C}I2C0_SDA${COLOR_RESET}/GPIOA12\t\t3\t4\t            ${COLOR_VDD}VDD_5V${COLOR_RESET}\n"
-    printf "\t${COLOR_I2C}I2C0_SCL${COLOR_RESET}/GPIOA11\t\t5\t6\t             ${COLOR_VDD}GND${COLOR_RESET}\n"
-    printf "\t     GPIOG11\t\t\t7\t8\t       ${COLOR_UART}UART1_TX${COLOR_RESET}/GPIOG6\n"
+    printf "\t${COLOR_VDD}    SYS_3.3V${COLOR_RESET}\t\t\t( 1 )\t( 2 )\t            ${COLOR_VDD}VDD_5V${COLOR_RESET}\n"
+    printf "\t${COLOR_I2C}I2C0_SDA${COLOR_RESET}/GPIOA12\t\t( 3 )\t( 4 )\t            ${COLOR_VDD}VDD_5V${COLOR_RESET}\n"
+    printf "\t${COLOR_I2C}I2C0_SCL${COLOR_RESET}/GPIOA11\t\t( 5 )\t( 6 )\t             ${COLOR_VDD}GND${COLOR_RESET}\n"
+    printf "\t     GPIOG11\t\t\t( 7 )\t( 8 )\t       ${COLOR_UART}UART1_TX${COLOR_RESET}/GPIOG6\n"
     printf "\t      ${COLOR_VDD}GND${COLOR_RESET}\t\t\t9\t10\t       ${COLOR_UART}UART1_RX${COLOR_RESET}/GPIOG7\n"
     printf "\t${COLOR_UART}UART2_TX${COLOR_RESET}/GPIOA0\t\t\t11\t12\t            GPIOA6\n"
     printf "\t${COLOR_UART}UART2_RTS${COLOR_RESET}/GPIOA2\t\t13\t14\t             ${COLOR_VDD}GND${COLOR_RESET}\n"
