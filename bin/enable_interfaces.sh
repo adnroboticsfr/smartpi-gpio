@@ -55,9 +55,11 @@ configure_uart_baud_rate() {
         baud_rate=$default_baud
     fi
 
-    # Prompt user for new baud rate
-    read -p "Enter new baud rate for $uart (press Enter to keep $baud_rate): " new_baud_rate
-    baud_rate=${new_baud_rate:-$baud_rate}
+    # Prompt user for new baud rate or to keep the default
+    read -p "Enter new baud rate for $uart (or press Enter to keep $baud_rate): " new_baud_rate
+    if [[ -n $new_baud_rate ]]; then
+        baud_rate=$new_baud_rate
+    fi
 
     # Update the baud rate configuration
     if grep -q "^${uart}_baud=" "$ARMBIAN_ENV"; then
@@ -119,8 +121,6 @@ while true; do
         1) 
             if grep -q "i2c1" "$ARMBIAN_ENV"; then
                 remove_overlay "i2c1"
-                sed -i "/^i2c1_baud=/d" "$ARMBIAN_ENV"  # Supprimer la configuration du baud rate si présente
-                echo -e "\033[31mI2C1 configuration removed.\033[0m"
             else
                 add_overlay_if_missing "i2c1"
             fi
@@ -128,8 +128,6 @@ while true; do
         2) 
             if grep -q "i2c2" "$ARMBIAN_ENV"; then
                 remove_overlay "i2c2"
-                sed -i "/^i2c2_baud=/d" "$ARMBIAN_ENV"  # Supprimer la configuration du baud rate si présente
-                echo -e "\033[31mI2C2 configuration removed.\033[0m"
             else
                 add_overlay_if_missing "i2c2"
             fi
@@ -148,6 +146,7 @@ while true; do
                 echo -e "\033[31mUART1 configuration removed.\033[0m"
             else
                 add_overlay_if_missing "uart1"
+                echo -e "\033[32mUART1 enabled.\033[0m"
                 configure_uart_baud_rate "uart1"
             fi
             ;;
@@ -158,6 +157,7 @@ while true; do
                 echo -e "\033[31mUART2 configuration removed.\033[0m"
             else
                 add_overlay_if_missing "uart2"
+                echo -e "\033[32mUART2 enabled.\033[0m"
                 configure_uart_baud_rate "uart2"
             fi
             ;;
@@ -168,6 +168,7 @@ while true; do
                 echo -e "\033[31mUART3 configuration removed.\033[0m"
             else
                 add_overlay_if_missing "uart3"
+                echo -e "\033[32mUART3 enabled.\033[0m"
                 configure_uart_baud_rate "uart3"
             fi
             ;;
