@@ -2,26 +2,20 @@ from setuptools import setup, find_packages
 from setuptools.command.install import install
 import subprocess
 import os
-import shutil
 
 class PostInstallCommand(install):
-    """Commande post-installation pour exécuter activate_interfaces.sh."""
+    """Commande post-installation pour exécuter le script activate_interfaces.sh."""
     def run(self):
-        install.run(self)  # Exécuter le processus d'installation standard
+        install.run(self)  # Exécuter l'installation standard
         try:
-            # Chemin du script à copier
-            src_script = os.path.join(os.path.dirname(__file__), 'bin/activate_interfaces.sh')
-            dest_script = '/usr/local/bin/activate_interfaces.sh'
+            # Exécuter le script depuis /usr/local/bin/ après qu'il a été copié
+            script_path = '/usr/local/bin/activate_interfaces.sh'
 
-            # Copier le script dans /usr/local/bin/
-            shutil.copy(src_script, dest_script)
-            print(f"Script copié dans {dest_script}")
-
-            # S'assurer que le script est exécutable
-            subprocess.run(['sudo', 'chmod', '+x', dest_script], check=True)
-
-            # Exécuter le script après installation
-            subprocess.run(['sudo', 'bash', dest_script], check=True)
+            # Vérifier s'il est bien là et exécuter le script
+            if os.path.exists(script_path):
+                subprocess.run(['sudo', 'bash', script_path], check=True)
+            else:
+                print(f"Erreur: Le fichier {script_path} est introuvable.")
         except Exception as e:
             print(f"Erreur lors de l'exécution du script post-installation : {e}")
 
@@ -31,7 +25,10 @@ setup(
     description="Gestion des GPIO pour Smart Pi One",
     author="ADNroboticsfr",
     packages=find_packages(),
-    scripts=['bin/gpio'],  # Le script 'gpio' sera installé dans /usr/local/bin/
+    scripts=['bin/gpio'],  # Copie le script gpio dans /usr/local/bin
+    data_files=[
+        ('/usr/local/bin', ['bin/activate_interfaces.sh']),  # Copier activate_interfaces.sh dans /usr/local/bin
+    ],
     install_requires=[
         'Flask>=2.0.0',
         'Pillow>=8.0.0',
