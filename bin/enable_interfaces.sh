@@ -88,7 +88,7 @@ configure_uart_baud_rate() {
 
 # Function to display the GPIO pin table
 display_gpio_table() {
-    echo -e "==================== GPIO Pinout ====================\n"
+    echo -e "\n==================== GPIO Pinout ====================\n"
     echo -e " Odd Pins\t\t\t\tEven Pins"
     echo -e "====================================================="
     
@@ -102,11 +102,11 @@ display_gpio_table() {
     echo -e "13\tUART2_RTS/GPIOA2\t\t\t\t14\tGND"
     echo -e "15\tUART2_CTS/GPIOA3\t\t\t\t16\tUART1_RTS/GPIOG8"
     echo -e "17\tSYS_3.3V\t\t\t\t\t18\tUART1_CTS/GPIOG9"
-    echo -e "19\t${COLOR_GPIO}SPI0_MOSI/GPIOC0${COLOR_RESET}\t\t\t20\tGND"
-    echo -e "21\t${COLOR_GPIO}SPI0_MISO/GPIOC1${COLOR_RESET}\t\t\t22\t${COLOR_UART}UART2_RX/GPIOA1${COLOR_RESET}"
-    echo -e "23\t${COLOR_GPIO}SPI0_CLK/GPIOC2${COLOR_RESET}\t\t\t24\t${COLOR_GPIO}SPI0_CS/GPIOC3${COLOR_RESET}"
+    echo -e "19\t${COLOR_GPIO}SPI0_MOSI/GPIOC0${COLOR_RESET}\t\t20\tGND"
+    echo -e "21\t${COLOR_GPIO}SPI0_MISO/GPIOC1${COLOR_RESET}\t\t22\t${COLOR_UART}UART2_RX/GPIOA1${COLOR_RESET}"
+    echo -e "23\t${COLOR_GPIO}SPI0_CLK/GPIOC2${COLOR_RESET}\t\t24\t${COLOR_GPIO}SPI0_CS/GPIOC3${COLOR_RESET}"
     echo -e "25\tGND\t\t\t\t\t\t26\tSPDIF-OUT/GPIOA17"
-    echo -e "27\t${COLOR_I2C}I2C1_SDA/GPIOA19${COLOR_RESET}\t\t\t28\t${COLOR_I2C}I2C1_SCL/GPIOA18${COLOR_RESET}"
+    echo -e "27\t${COLOR_I2C}I2C1_SDA/GPIOA19${COLOR_RESET}\t\t28\t${COLOR_I2C}I2C1_SCL/GPIOA18${COLOR_RESET}"
     echo -e "29\tGPIOA20/PCM0_DOUT\t\t\t\t30\tGND"
     echo -e "31\tGPIOA21/PCM0_DIN\t\t\t\t32\tGPIOA7"
     echo -e "33\tGPIOA8\t\t\t\t\t\t34\tGND"
@@ -146,7 +146,8 @@ show_menu() {
     echo "|  5 | [$(if grep -q "uart2" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | UART2 (TX: GPIOA0[11], RX: GPIOA1[22])     |"
     echo "|  6 | [$(if grep -q "uart3" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | UART3 (TX: GPIOA16[35], RX: GPIOA14[40])   |"
     echo "|  7 | [$(if grep -q "spi0" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | SPI0 (MOSI: GPIOC0[19], MISO: GPIOC1[21])  |"
-    echo "|   8 | Display GPIO Pinout                     |"
+    echo "-------------------------------------------"
+    echo "|  8 | Display GPIO Pinout                     |"
     echo "-------------------------------------------"
     echo "|  9 | Exit                                     |"
     echo "-------------------------------------------"
