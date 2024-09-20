@@ -176,7 +176,7 @@ show_menu() {
 }
 
 # Main loop to show the menu and process choices
-while true; do 
+while true; do
     display_pin_config
     show_dashboard
     show_menu
