@@ -63,7 +63,7 @@ configure_uart_baud_rate() {
 }
 
 display_gpio_table() {
-    echo -e "\n-=====================--[ GPIO Pinout - SMART PI ONE ]--=====================-\n"
+    echo -e "\n======================--[ GPIO Pinout - SMART PI ONE ]--======================\n"
     echo -e "              Name          \t     Pins               Name"
     echo -e "=============================================================================="
     
