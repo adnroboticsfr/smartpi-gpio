@@ -21,12 +21,15 @@ add_overlay_if_missing() {
         if ! grep -q "$overlay" "$ARMBIAN_ENV"; then
             sed -i "/^overlays=/ s/$/ $overlay/" "$ARMBIAN_ENV"
             echo -e "\033[32m$overlay added to the overlays line\033[0m"
+            sleep 3
         else
             echo -e "\033[33m$overlay is already present in the overlays line\033[0m"
+            sleep 3
         fi
     else
         echo "overlays=$overlay" >> "$ARMBIAN_ENV"
         echo -e "\033[32mOverlays line created with $overlay\033[0m"
+        sleep 3
     fi
 }
 
@@ -36,8 +39,47 @@ remove_overlay() {
     if grep -q "^overlays=" "$ARMBIAN_ENV"; then
         sed -i "/^overlays=/ s/ $overlay//" "$ARMBIAN_ENV"
         echo -e "\033[31m$overlay removed from the overlays line\033[0m"
+        sleep 3
     else
         echo "No overlays line found."
+    fi
+}
+
+# Function to configure UART baud rate
+configure_uart_baud_rate() {
+    local uart="$1"
+    echo "Configuring baud rate for $uart."
+    read -p "Enter baud rate for $uart (default is 115200, or press Enter to keep): " baud_rate
+    baud_rate=${baud_rate:-115200}
+    
+    # Update the baud rate configuration
+    if grep -q "^${uart}_baud=" "$ARMBIAN_ENV"; then
+        sed -i "/^${uart}_baud=/ s/= .*/= $baud_rate/" "$ARMBIAN_ENV"
+        echo -e "\033[32m$uart baud rate updated to $baud_rate\033[0m"
+        sleep 3
+    else
+        echo "${uart}_baud=$baud_rate" >> "$ARMBIAN_ENV"
+        echo -e "\033[32m${uart}_baud set to $baud_rate\033[0m"
+        sleep 3
+    fi
+}
+
+# Function to configure SPI frequency
+configure_spi_frequency() {
+    local spi="$1"
+    echo "Configuring frequency for $spi."
+    read -p "Enter frequency for $spi (default is 500000, or press Enter to keep): " frequency
+    frequency=${frequency:-500000}
+    
+    # Update the frequency configuration
+    if grep -q "^${spi}_freq=" "$ARMBIAN_ENV"; then
+        sed -i "/^${spi}_freq=/ s/= .*/= $frequency/" "$ARMBIAN_ENV"
+        echo -e "\033[32m$spi frequency updated to $frequency\033[0m"
+        sleep 3
+    else
+        echo "${spi}_freq=$frequency" >> "$ARMBIAN_ENV"
+        echo -e "\033[32m${spi}_freq set to $frequency\033[0m"
+        sleep 3
     fi
 }
 
@@ -114,6 +156,7 @@ while true; do
                 remove_overlay "uart1"
             else
                 add_overlay_if_missing "uart1"
+                configure_uart_baud_rate "uart1"
             fi
             ;;
         5) 
@@ -121,6 +164,7 @@ while true; do
                 remove_overlay "uart2"
             else
                 add_overlay_if_missing "uart2"
+                configure_uart_baud_rate "uart2"
             fi
             ;;
         6) 
@@ -128,6 +172,7 @@ while true; do
                 remove_overlay "uart3"
             else
                 add_overlay_if_missing "uart3"
+                configure_uart_baud_rate "uart3"
             fi
             ;;
         7) 
@@ -135,12 +180,11 @@ while true; do
                 remove_overlay "spi0"
             else
                 add_overlay_if_missing "spi0"
+                configure_spi_frequency "spi0"
             fi
             ;;
         8) break;;
     esac
-
-    echo "Changes have been made."
 done
 
 # Show changes before reboot
