@@ -140,33 +140,28 @@ while true; do
         8) break;;
     esac
 
-    echo "Changes have been made. Press any key to continue..."
-    read -n 1 -s
+    echo "Changes have been made."
 done
 
 # Show changes before reboot
 echo -e "\033[34mChanges made to overlays:\033[0m"
 grep "^overlays=" "$ARMBIAN_ENV"
 
-# Prompt for reboot with countdown
-echo -e "\033[33mSystem will reboot in 10 seconds to apply changes...\033[0m"
+# Prompt for reboot with animated points
+echo -e "\033[33mSystem will reboot in a moment to apply changes...\033[0m"
 echo "Press any key to cancel the reboot."
 backup_armbian_env
 
-for i in {10..1}; do
-    echo -n "$i... "
+while true; do
+    echo -n "."
     sleep 1
+    if read -t 0.1 -n 1; then
+        echo -e "\n\033[31mReboot canceled.\033[0m"
+        break
+    fi
 done
-echo ""
 
-if read -t 1 -n 1; then
-    echo -e "\033[31mReboot canceled.\033[0m"
-else
-    echo -n "Rebooting now"
-    for i in {1..3}; do
-        echo -n "."
-        sleep 1
-    done
-    echo ""
+if [ $? -eq 0 ]; then
+    echo "Rebooting now..."
     reboot
 fi
