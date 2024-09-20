@@ -45,20 +45,20 @@ remove_overlay() {
 configure_uart_baud_rate() {
     local uart="$1"
     local default_baud=115200
-    local baud_rate
+    local current_baud
 
-    # Check if a baud rate is already set
     if grep -q "^${uart}_baud=" "$ARMBIAN_ENV"; then
-        baud_rate=$(grep "^${uart}_baud=" "$ARMBIAN_ENV" | cut -d'=' -f2)
-        echo -e "\033[33mCurrent baud rate for $uart is $baud_rate (default is $default_baud)\033[0m"
+        current_baud=$(grep "^${uart}_baud=" "$ARMBIAN_ENV" | cut -d'=' -f2 | xargs)
     else
-        baud_rate=$default_baud
+        current_baud=""
     fi
 
-    # Prompt user for new baud rate or to keep the default
-    read -p "Enter new baud rate for $uart (or press Enter to keep $baud_rate): " new_baud_rate
-    if [[ -n $new_baud_rate ]]; then
-        baud_rate=$new_baud_rate
+    echo -e "Current baud rate for $uart: \033[34m${current_baud:-$default_baud}\033[0m (default is $default_baud)"
+    read -p "Enter a new baud rate for $uart (or press Enter to keep the current value): " baud_rate
+    baud_rate=${baud_rate:-$current_baud}
+
+    if [ -z "$baud_rate" ]; then
+        baud_rate=$default_baud
     fi
 
     # Update the baud rate configuration
@@ -142,33 +142,24 @@ while true; do
         4) 
             if grep -q "uart1" "$ARMBIAN_ENV"; then
                 remove_overlay "uart1"
-                sed -i "/^uart1_baud=/d" "$ARMBIAN_ENV"  # Supprimer la configuration du baud rate
-                echo -e "\033[31mUART1 configuration removed.\033[0m"
             else
                 add_overlay_if_missing "uart1"
-                echo -e "\033[32mUART1 enabled.\033[0m"
                 configure_uart_baud_rate "uart1"
             fi
             ;;
         5) 
             if grep -q "uart2" "$ARMBIAN_ENV"; then
                 remove_overlay "uart2"
-                sed -i "/^uart2_baud=/d" "$ARMBIAN_ENV"  # Supprimer la configuration du baud rate
-                echo -e "\033[31mUART2 configuration removed.\033[0m"
             else
                 add_overlay_if_missing "uart2"
-                echo -e "\033[32mUART2 enabled.\033[0m"
                 configure_uart_baud_rate "uart2"
             fi
             ;;
         6) 
             if grep -q "uart3" "$ARMBIAN_ENV"; then
                 remove_overlay "uart3"
-                sed -i "/^uart3_baud=/d" "$ARMBIAN_ENV"  # Supprimer la configuration du baud rate
-                echo -e "\033[31mUART3 configuration removed.\033[0m"
             else
                 add_overlay_if_missing "uart3"
-                echo -e "\033[32mUART3 enabled.\033[0m"
                 configure_uart_baud_rate "uart3"
             fi
             ;;
