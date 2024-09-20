@@ -52,14 +52,14 @@ display_pin_config() {
     echo "=== Configuration des Pins ==="
     echo "Numéro | Nom                               | GPIO Linux"
     echo "------------------------------------------------------"
-    for pin in {1..40}; do
+    for pin in "${!pins[@]}"; do
         printf "%-6s | %-35s | %s\n" "$pin" "${pins[$pin]}" "$(get_gpio $pin)"
     done
     echo "------------------------------------------------------"
     echo "Exemples de composants :"
-    echo "- Capteur I2C connecté à I2C1_SDA (GPIOA19)"
-    echo "- Module UART connecté à UART2_TX (GPIOA0)"
-    echo "- Module SPI connecté à SPI0_MOSI (GPIOC0)"
+    echo "- Capteur I2C connecté à I2C1_SDA (GPIOA19[27])"
+    echo "- Module UART connecté à UART2_TX (GPIOA0[11])"
+    echo "- Module SPI connecté à SPI0_MOSI (GPIOC0[19])"
     echo "========================="
 }
 
@@ -163,13 +163,13 @@ show_menu() {
     echo "-------------------------------------------"
     echo "| No | Status | Feature                             |"
     echo "-------------------------------------------"
-    echo "|  1 | [$(if grep -q "i2c1" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | I2C1 (SDA: GPIOA19, SCL: GPIOA18)  |"
-    echo "|  2 | [$(if grep -q "i2c2" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | I2C2 (SDA: GPIOA12, SCL: GPIOA11)  |"
+    echo "|  1 | [$(if grep -q "i2c1" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | I2C1 (SDA: GPIOA19[27], SCL: GPIOA18[28])  |"
+    echo "|  2 | [$(if grep -q "i2c2" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | I2C2 (SDA: GPIOA12[3], SCL: GPIOA11[4])  |"
     echo "|  3 | [$(if grep -q "pwm" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | PWM (GPIO à déclarer)              |"
-    echo "|  4 | [$(if grep -q "uart1" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | UART1 (TX: GPIOG6, RX: GPIOG7)     |"
-    echo "|  5 | [$(if grep -q "uart2" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | UART2 (TX: GPIOA0, RX: GPIOA1)     |"
-    echo "|  6 | [$(if grep -q "uart3" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | UART3 (TX: GPIOA16, RX: GPIOA14)   |"
-    echo "|  7 | [$(if grep -q "spi0" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | SPI0 (MOSI: GPIOC0, MISO: GPIOC1)  |"
+    echo "|  4 | [$(if grep -q "uart1" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | UART1 (TX: GPIOG6[8], RX: GPIOG7[10])     |"
+    echo "|  5 | [$(if grep -q "uart2" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | UART2 (TX: GPIOA0[11], RX: GPIOA1[22])     |"
+    echo "|  6 | [$(if grep -q "uart3" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | UART3 (TX: GPIOA16[35], RX: GPIOA14[40])   |"
+    echo "|  7 | [$(if grep -q "spi0" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | SPI0 (MOSI: GPIOC0[19], MISO: GPIOC1[21])  |"
     echo "-------------------------------------------"
     echo "|  8 | Exit                                     |"
     echo "-------------------------------------------"
@@ -177,7 +177,7 @@ show_menu() {
 
 # Main loop to show the menu and process choices
 while true; do
-    display_pin_config  # Afficher la configuration des pins
+    display_pin_config
     show_dashboard
     show_menu
     read -p "Enter your choice (1-8): " choice
