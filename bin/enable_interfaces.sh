@@ -70,8 +70,8 @@ display_gpio_table() {
     printf "\t${COLOR_VDD}    SYS_3.3V${COLOR_RESET}\t\t\t1\t2\t    ${COLOR_VDD}VDD_5V${COLOR_RESET}\n"
     printf "\t${COLOR_I2C}I2C0_SDA${COLOR_RESET}/GPIOA12\t\t3\t4\t  ${COLOR_VDD}VDD_5V${COLOR_RESET}\n"
     printf "\t${COLOR_I2C}I2C0_SCL${COLOR_RESET}/GPIOA11\t\t5\t6\t     ${COLOR_VDD}GND${COLOR_RESET}\n"
-    printf "\t    GPIOG11\t\t\t\t7\t8\t${COLOR_UART}UART1_TX${COLOR_RESET}/GPIOG6\n"
-    printf "\t     ${COLOR_VDD}GND${COLOR_RESET}\t\t\t\t9\t10\t${COLOR_UART}UART1_RX${COLOR_RESET}/GPIOG7\n"
+    printf "\t    GPIOG11\t\t\t7\t8\t${COLOR_UART}UART1_TX${COLOR_RESET}/GPIOG6\n"
+    printf "\t     ${COLOR_VDD}GND${COLOR_RESET}\t\t\t9\t10\t${COLOR_UART}UART1_RX${COLOR_RESET}/GPIOG7\n"
     printf "\t${COLOR_UART}UART2_TX${COLOR_RESET}/GPIOA0\t\t\t11\t12\t    GPIOA6\n"
     printf "\t${COLOR_UART}UART2_RTS${COLOR_RESET}/GPIOA2\t\t13\t14\t     ${COLOR_VDD}GND${COLOR_RESET}\n"
     printf "\t${COLOR_UART}UART2_CTS${COLOR_RESET}/GPIOA3\t\t15\t16\t${COLOR_UART}UART1_RTS${COLOR_RESET}/GPIOG8\n"
@@ -85,8 +85,8 @@ display_gpio_table() {
     printf "\tGPIOA21/PCM0_DIN\t\t31\t32\t     GPIOA7\n"
     printf "\tGPIOA8\t\t\t\t33\t34\t      ${COLOR_VDD}GND${COLOR_RESET}\n"
     printf "\t${COLOR_UART}UART3_CTS${COLOR_RESET}/${COLOR_GPIO}SPI1_MISO${COLOR_RESET}/GPIOA16\t35\t36\t${COLOR_UART}UART3_TX${COLOR_RESET}/${COLOR_GPIO}SPI1_CS${COLOR_RESET}/GPIOA13\n"
-    printf "\t    GPIOA9\t\t\t\t37\t38\t${COLOR_UART}UART3_RTS${COLOR_RESET}/${COLOR_GPIO}SPI1_MOSI${COLOR_RESET}/GPIOA15\n"
-    printf "\t     ${COLOR_VDD}GND${COLOR_RESET}\t\t\t\t39\t40\t${COLOR_UART}UART3_RX${COLOR_RESET}/${COLOR_GPIO}SPI1_CLK${COLOR_RESET}/GPIOA14\n"
+    printf "\t    GPIOA9\t\t\t37\t38\t${COLOR_UART}UART3_RTS${COLOR_RESET}/${COLOR_GPIO}SPI1_MOSI${COLOR_RESET}/GPIOA15\n"
+    printf "\t     ${COLOR_VDD}GND${COLOR_RESET}\t\t\t39\t40\t${COLOR_UART}UART3_RX${COLOR_RESET}/${COLOR_GPIO}SPI1_CLK${COLOR_RESET}/GPIOA14\n"
     
     echo -e "============================================================================================\n"
 }
