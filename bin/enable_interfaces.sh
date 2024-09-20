@@ -41,19 +41,16 @@ remove_overlay() {
     fi
 
     # Remove associated configurations
-    remove_configuration "$overlay"
+    remove_uart_configuration "$overlay"
 }
 
-# Function to remove configuration for SPI or UART
-remove_configuration() {
-    local overlay="$1"
+# Function to remove UART baud rate configuration
+remove_uart_configuration() {
+    local uart="$1"
     
-    if [[ "$overlay" == "spi0" ]]; then
-        sed -i "/^spi0_freq=/d" "$ARMBIAN_ENV"
-        echo -e "\033[31mspi0_freq configuration removed from $ARMBIAN_ENV\033[0m"
-    elif [[ "$overlay" == "uart1" || "$overlay" == "uart2" || "$overlay" == "uart3" ]]; then
-        sed -i "/^${overlay}_baud=/d" "$ARMBIAN_ENV"
-        echo -e "\033[31m${overlay}_baud configuration removed from $ARMBIAN_ENV\033[0m"
+    if [[ "$uart" == "uart1" || "$uart" == "uart2" || "$uart" == "uart3" ]]; then
+        sed -i "/^${uart}_baud=/d" "$ARMBIAN_ENV"
+        echo -e "\033[31m${uart}_baud configuration removed from $ARMBIAN_ENV\033[0m"
     fi
 }
 
