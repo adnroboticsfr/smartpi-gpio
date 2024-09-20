@@ -2,10 +2,10 @@
 import sys
 from smartpi_gpio.gpio import GPIO
 from smartpi_gpio.pins import PinMode
-from smartpi_gpio.pca9685 import PCA9685  # Importer la classe PCA9685
+from smartpi_gpio.pca9685 import PCA9685  # Import the PCA9685 class
 
-def afficher_utilisation():
-    print("Utilisation :")
+def show_usage():
+    print("Usage:")
     print("  gpio <pin> mode <in|out> [pull-up|pull-down|none]")
     print("  gpio <pin> write <on|off|high|low|1|0>")
     print("  gpio <pin> read")
@@ -18,33 +18,33 @@ def afficher_utilisation():
 
 def main():
     if len(sys.argv) < 2:
-        afficher_utilisation()
+        show_usage()
         sys.exit(1)
 
-    # Initialiser GPIO sans spécifier de mode
+    # Initialize GPIO without specifying a mode
     gpio = GPIO()
 
-    # Définir le mode de numérotation des broches si nécessaire
-    # Par exemple : gpio.set_mode(PinMode.BOARD)
+    # Set pin numbering mode if necessary
+    # For example: gpio.set_mode(PinMode.BOARD)
 
     if sys.argv[1] == "pca9685":
         try:
-            pca = PCA9685()  # Créer une instance du PCA9685
+            pca = PCA9685()  # Create an instance of PCA9685
             if len(sys.argv) == 5:
                 channel = int(sys.argv[2])
                 on = int(sys.argv[3])
                 off = int(sys.argv[4])
                 pca.set_pwm(channel, on, off)
-                print(f"PWM défini sur le canal {channel} (on: {on}, off: {off})")
+                print(f"PWM set on channel {channel} (on: {on}, off: {off})")
             elif len(sys.argv) == 4 and sys.argv[2] == "freq":
                 freq = int(sys.argv[3])
                 pca.set_pwm_freq(freq)
-                print(f"Fréquence PWM définie à {freq} Hz")
+                print(f"PWM frequency set to {freq} Hz")
             else:
-                afficher_utilisation()
+                show_usage()
                 sys.exit(1)
         except Exception as e:
-            print(f"Erreur inattendue avec PCA9685 : {e}")
+            print(f"Unexpected error with PCA9685: {e}")
             sys.exit(1)
 
     elif sys.argv[1] == "version":
@@ -53,20 +53,20 @@ def main():
 
     elif sys.argv[1] == "export":
         if len(sys.argv) != 3:
-            afficher_utilisation()
+            show_usage()
             sys.exit(1)
         pin = int(sys.argv[2])
         gpio.export(pin)
-        print(f"Broche GPIO {pin} exportée.")
+        print(f"GPIO pin {pin} exported.")
         sys.exit(0)
 
     elif sys.argv[1] == "unexport":
         if len(sys.argv) != 3:
-            afficher_utilisation()
+            show_usage()
             sys.exit(1)
         pin = int(sys.argv[2])
         gpio.unexport(pin)
-        print(f"Broche GPIO {pin} désenregistrée.")
+        print(f"GPIO pin {pin} unexported.")
         sys.exit(0)
 
     else:
@@ -76,53 +76,53 @@ def main():
                 return
 
             pin = int(sys.argv[1])
-            commande = sys.argv[2]
+            command = sys.argv[2]
 
-            if commande == "mode":
+            if command == "mode":
                 if len(sys.argv) < 4 or len(sys.argv) > 5:
-                    afficher_utilisation()
+                    show_usage()
                     sys.exit(1)
                 mode = sys.argv[3].lower()
                 pull = sys.argv[4].lower() if len(sys.argv) == 5 else None
 
                 if mode not in ["in", "out"]:
-                    print("Mode invalide. Utilisez 'in' ou 'out'.")
-                    afficher_utilisation()
+                    print("Invalid mode. Use 'in' or 'out'.")
+                    show_usage()
                     sys.exit(1)
 
-                gpio.set_direction(pin, direction=mode, pull=pull)#, pull=pull
-               # print(f"Mode de la broche {pin} défini sur {mode}, avec {pull if pull else 'aucune résistance interne'}.")
-                
-            elif commande == "write":
+                gpio.set_direction(pin, direction=mode, pull=pull)
+                # print(f"Pin {pin} mode set to {mode}, with {pull if pull else 'no internal resistance'}.")
+
+            elif command == "write":
                 if len(sys.argv) != 4:
-                    afficher_utilisation()
+                    show_usage()
                     sys.exit(1)
-                valeur = sys.argv[3].lower()
-                if valeur not in ["on", "off", "high", "low", "1", "0"]:
-                    print("Valeur invalide. Utilisez 'on', 'off', 'high', 'low', '1', ou '0'.")
-                    afficher_utilisation()
+                value = sys.argv[3].lower()
+                if value not in ["on", "off", "high", "low", "1", "0"]:
+                    print("Invalid value. Use 'on', 'off', 'high', 'low', '1', or '0'.")
+                    show_usage()
                     sys.exit(1)
-                valeur_numerique = 1 if valeur in ["on", "high", "1"] else 0
-                gpio.write(pin, valeur_numerique)
-                print(f"Écriture {valeur_numerique} sur la broche {pin}")
+                numeric_value = 1 if value in ["on", "high", "1"] else 0
+                gpio.write(pin, numeric_value)
+                print(f"Written {numeric_value} to pin {pin}")
 
-            elif commande == "read":
+            elif command == "read":
                 if len(sys.argv) != 3:
-                    afficher_utilisation()
+                    show_usage()
                     sys.exit(1)
-                valeur = gpio.read(pin)
-                print(f"Broche {pin} : {valeur}")
+                value = gpio.read(pin)
+                print(f"Pin {pin}: {value}")
 
             else:
-                afficher_utilisation()
+                show_usage()
                 sys.exit(1)
 
         except ValueError as e:
-            print(f"Erreur : {e}")
-            afficher_utilisation()
+            print(f"Error: {e}")
+            show_usage()
             sys.exit(1)
         except Exception as e:
-            print(f"Erreur inattendue : {e}")
+            print(f"Unexpected error: {e}")
             sys.exit(1)
 
 if __name__ == "__main__":

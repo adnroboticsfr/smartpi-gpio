@@ -5,7 +5,6 @@ import threading
 
 class GPIOInterrupts:
     def __init__(self, mode="BCM"):
-        """Initialize GPIO interrupts with mode handling."""
         super().__init__()
         self.mode = mode
         self.last_event_time = {}
