@@ -18,7 +18,7 @@ backup_armbian_env() {
 
 # Function to validate user input
 validate_input() {
-    [[ $1 =~ ^[1-8]$ ]]
+    [[ $1 =~ ^[1-9]$ ]]
 }
 
 # Function to add an overlay if it is not already present
@@ -94,7 +94,7 @@ display_gpio_table() {
     
     # Odd pins
     echo -e "${COLOR_VDD}1\tSYS_3.3V\t\t\t\t2\t${COLOR_VDD}VDD_5V${COLOR_RESET}"
-    echo -e "${COLOR_I2C}3\tI2C0_SDA/GPIOA12\t\t\t4\tVDD_5V${COLOR_RESET}"
+    echo -e "${COLOR_I2C}3\tI2C0_SDA/GPIOA12\t\t\t\t4\tVDD_5V${COLOR_RESET}"
     echo -e "5\tI2C0_SCL/GPIOA11\t\t\t\t6\tGND"
     echo -e "7\tGPIOG11\t\t\t\t\t8\t${COLOR_UART}UART1_TX/GPIOG6${COLOR_RESET}"
     echo -e "9\tGND\t\t\t\t\t\t10\t${COLOR_UART}UART1_RX/GPIOG7${COLOR_RESET}"
@@ -146,8 +146,9 @@ show_menu() {
     echo "|  5 | [$(if grep -q "uart2" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | UART2 (TX: GPIOA0[11], RX: GPIOA1[22])     |"
     echo "|  6 | [$(if grep -q "uart3" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | UART3 (TX: GPIOA16[35], RX: GPIOA14[40])   |"
     echo "|  7 | [$(if grep -q "spi0" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | SPI0 (MOSI: GPIOC0[19], MISO: GPIOC1[21])  |"
+    echo "|   8 | Display GPIO Pinout                     |"
     echo "-------------------------------------------"
-    echo "|  8 | Exit                                     |"
+    echo "|  9 | Exit                                     |"
     echo "-------------------------------------------"
 }
 
@@ -155,7 +156,7 @@ show_menu() {
 while true; do
     show_dashboard
     show_menu
-    read -p "Enter your choice (1-8): " choice
+    read -p "Enter your choice (1-9): " choice
 
     if ! validate_input "$choice"; then
         echo -e "\033[31mInvalid option. Please try again.\033[0m"
@@ -216,13 +217,14 @@ while true; do
             fi
             ;;
         8) 
+            display_gpio_table
+            read -p "Press any key to continue..."
+            ;;
+        9) 
             break
             ;;
     esac
 done
-
-# Show the GPIO pinout
-display_gpio_table
 
 # Show changes before reboot
 echo -e "\033[34mChanges made to overlays:\033[0m"
