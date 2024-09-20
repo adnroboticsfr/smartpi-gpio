@@ -41,6 +41,22 @@ remove_overlay() {
     fi
 }
 
+# Function to configure UART baud rate
+configure_uart_baud_rate() {
+    local uart="$1"
+    read -p "Enter baud rate for $uart (default is 115200): " baud_rate
+    baud_rate=${baud_rate:-115200}
+    
+    # Update the baud rate configuration
+    if grep -q "^${uart}_baud=" "$ARMBIAN_ENV"; then
+        sed -i "/^${uart}_baud=/ s/= .*/= $baud_rate/" "$ARMBIAN_ENV"
+        echo -e "\033[32m$uart baud rate updated to $baud_rate\033[0m"
+    else
+        echo "${uart}_baud=$baud_rate" >> "$ARMBIAN_ENV"
+        echo -e "\033[32m${uart}_baud set to $baud_rate\033[0m"
+    fi
+}
+
 # Function to display the dashboard
 show_dashboard() {
     clear
@@ -114,6 +130,7 @@ while true; do
                 remove_overlay "uart1"
             else
                 add_overlay_if_missing "uart1"
+                configure_uart_baud_rate "uart1"
             fi
             ;;
         5) 
@@ -121,6 +138,7 @@ while true; do
                 remove_overlay "uart2"
             else
                 add_overlay_if_missing "uart2"
+                configure_uart_baud_rate "uart2"
             fi
             ;;
         6) 
@@ -128,6 +146,7 @@ while true; do
                 remove_overlay "uart3"
             else
                 add_overlay_if_missing "uart3"
+                configure_uart_baud_rate "uart3"
             fi
             ;;
         7) 
@@ -139,8 +158,6 @@ while true; do
             ;;
         8) break;;
     esac
-
-    echo "Changes have been made."
 done
 
 # Show changes before reboot
