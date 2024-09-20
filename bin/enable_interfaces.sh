@@ -11,7 +11,7 @@ backup_armbian_env() {
 
 # Function to validate user input
 validate_input() {
-    [[ $1 =~ ^[1-8]$ ]]
+    [[ $1 =~ ^[1-9]$ ]]
 }
 
 # Function to add an overlay if it is not already present
@@ -73,52 +73,64 @@ configure_uart_baud_rate() {
     fi
 }
 
-# Function to display GPIO ports and their numbers
+# Function to display GPIO ports in two columns
 display_gpio_ports() {
     echo "=== GPIO Ports ==="
-    echo "Pin#  Name                             Linux GPIO"
-    echo "-------------------------------------------------"
-    echo "1     SYS_3.3V                       -"
-    echo "2     VDD_5V                         -"
-    echo "3     I2C0_SDA/GPIOA12               -"
-    echo "4     VDD_5V                         -"
-    echo "5     I2C0_SCL/GPIOA11               -"
-    echo "6     GND                             -"
-    echo "7     GPIOG11                        203"
-    echo "8     UART1_TX/GPIOG6                198"
-    echo "9     GND                             -"
-    echo "10    UART1_RX/GPIOG7                199"
-    echo "11    UART2_TX/GPIOA0                 0"
-    echo "12    GPIOA6                          6"
-    echo "13    UART2_RTS/GPIOA2                2"
-    echo "14    GND                             -"
-    echo "15    UART2_CTS/GPIOA3                3"
-    echo "16    UART1_RTS/GPIOG8                200"
-    echo "17    SYS_3.3V                       -"
-    echo "18    UART1_CTS/GPIOG9                201"
-    echo "19    SPI0_MOSI/GPIOC0                64"
-    echo "20    GND                             -"
-    echo "21    SPI0_MISO/GPIOC1                65"
-    echo "22    UART2_RX/GPIOA1                 1"
-    echo "23    SPI0_CLK/GPIOC2                 66"
-    echo "24    SPI0_CS/GPIOC3                  67"
-    echo "25    GND                             -"
-    echo "26    SPDIF-OUT/GPIOA17               17"
-    echo "27    I2C1_SDA/GPIOA19                19"
-    echo "28    I2C1_SCL/GPIOA18                18"
-    echo "29    GPIOA20                          20"
-    echo "30    GND                             -"
-    echo "31    GPIOA21                          21"
-    echo "32    GPIOA7                           7"
-    echo "33    GPIOA8                           8"
-    echo "34    GND                             -"
-    echo "35    UART3_CTS/SPI1_MISO/GPIOA16     16"
-    echo "36    UART3_TX/SPI1_CS/GPIOA13        13"
-    echo "37    GPIOA9                           9"
-    echo "38    UART3_RTS/SPI1_MOSI/GPIOA15     15"
-    echo "39    GND                             -"
-    echo "40    UART3_RX/SPI1_CLK/GPIOA14       14"
-    echo "-------------------------------------------------"
+    echo " Pin# | Name                          | Linux GPIO  |  Pin# | Name                          | Linux GPIO  "
+    echo "------------------------------------------------------------------------------------------"
+
+    for i in {1..40}; do
+        case $i in
+            1)  name="SYS_3.3V";  gpio="-";;
+            2)  name="VDD_5V";    gpio="-";;
+            3)  name="I2C0_SDA/GPIOA12"; gpio="-";;
+            4)  name="VDD_5V";    gpio="-";;
+            5)  name="I2C0_SCL/GPIOA11"; gpio="-";;
+            6)  name="GND";       gpio="-";;
+            7)  name="GPIOG11";   gpio="203";;
+            8)  name="UART1_TX/GPIOG6"; gpio="198";;
+            9)  name="GND";       gpio="-";;
+            10) name="UART1_RX/GPIOG7"; gpio="199";;
+            11) name="UART2_TX/GPIOA0"; gpio="0";;
+            12) name="GPIOA6";    gpio="6";;
+            13) name="UART2_RTS/GPIOA2"; gpio="2";;
+            14) name="GND";       gpio="-";;
+            15) name="UART2_CTS/GPIOA3"; gpio="3";;
+            16) name="UART1_RTS/GPIOG8"; gpio="200";;
+            17) name="SYS_3.3V";  gpio="-";;
+            18) name="UART1_CTS/GPIOG9"; gpio="201";;
+            19) name="SPI0_MOSI/GPIOC0"; gpio="64";;
+            20) name="GND";       gpio="-";;
+            21) name="SPI0_MISO/GPIOC1"; gpio="65";;
+            22) name="UART2_RX/GPIOA1"; gpio="1";;
+            23) name="SPI0_CLK/GPIOC2"; gpio="66";;
+            24) name="SPI0_CS/GPIOC3"; gpio="67";;
+            25) name="GND";       gpio="-";;
+            26) name="SPDIF-OUT/GPIOA17"; gpio="17";;
+            27) name="I2C1_SDA/GPIOA19"; gpio="19";;
+            28) name="I2C1_SCL/GPIOA18"; gpio="18";;
+            29) name="GPIOA20";   gpio="20";;
+            30) name="GND";       gpio="-";;
+            31) name="GPIOA21";   gpio="21";;
+            32) name="GPIOA7";    gpio="7";;
+            33) name="GPIOA8";    gpio="8";;
+            34) name="GND";       gpio="-";;
+            35) name="UART3_CTS/SPI1_MISO/GPIOA16"; gpio="16";;
+            36) name="UART3_TX/SPI1_CS/GPIOA13"; gpio="13";;
+            37) name="GPIOA9";    gpio="9";;
+            38) name="UART3_RTS/SPI1_MOSI/GPIOA15"; gpio="15";;
+            39) name="GND";       gpio="-";;
+            40) name="UART3_RX/SPI1_CLK/GPIOA14"; gpio="14";;
+        esac
+
+        # Display in two columns
+        if (( i % 2 != 0 )); then
+            printf "  %3d | %-30s | %-11s |" "$i" "$name" "$gpio"
+        else
+            printf "  %3d | %-30s | %-11s\n" "$i" "$name" "$gpio"
+        fi
+    done
+    echo "------------------------------------------------------------------------------------------"
     read -p "Press any key to continue..."  # Attendre l'entrée de l'utilisateur
 }
 
@@ -152,16 +164,16 @@ show_menu() {
     echo "|  6 | [$(if grep -q "uart3" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | UART3 (TX: GPIOA16[35], RX: GPIOA14[40])   |"
     echo "|  7 | [$(if grep -q "spi0" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)] | SPI0 (MOSI: GPIOC0[19], MISO: GPIOC1[21])  |"
     echo "-------------------------------------------"
-    echo "|  8 | Exit                                     |"
+    echo "|  8 | View GPIO Ports                      |"
+    echo "|  9 | Exit                                 |"
     echo "-------------------------------------------"
 }
 
 # Main loop to show the menu and process choices
 while true; do
     show_dashboard
-    display_gpio_ports  # Afficher les ports GPIO
     show_menu
-    read -p "Enter your choice (1-8): " choice
+    read -p "Enter your choice (1-9): " choice
 
     if ! validate_input "$choice"; then
         echo "Invalid option. Please try again."
@@ -222,7 +234,10 @@ while true; do
                 configure_spi_frequency "spi0"
             fi
             ;;
-        8) break;;
+        8)
+            display_gpio_ports
+            ;;
+        9) break;;
     esac
 done
 
