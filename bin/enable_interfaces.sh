@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash 
 
 ARMBIAN_ENV="/boot/armbianEnv.txt"
 BACKUP_ENV="/boot/armbianEnv_backup.txt"
@@ -76,6 +76,22 @@ configure_uart_baud_rate() {
     else
         echo "${uart}_baud=$baud_rate" >> "$ARMBIAN_ENV"
         echo -e "\033[32m${uart}_baud set to $baud_rate\033[0m"
+    fi
+}
+
+# Function to configure SPI frequency
+configure_spi_frequency() {
+    echo "Configuring SPI0 frequency."
+    read -p "Enter SPI0 frequency (default is 500000, or press Enter to keep): " spi_freq
+    spi_freq=${spi_freq:-500000}
+    
+    # Update the frequency configuration
+    if grep -q "^spi0_freq=" "$ARMBIAN_ENV"; then
+        sed -i "/^spi0_freq=/ s/= .*/= $spi_freq/" "$ARMBIAN_ENV"
+        echo -e "\033[32mSPI0 frequency updated to $spi_freq\033[0m"
+    else
+        echo "spi0_freq=$spi_freq" >> "$ARMBIAN_ENV"
+        echo -e "\033[32mSPI0 frequency set to $spi_freq\033[0m"
     fi
 }
 
@@ -175,7 +191,7 @@ while true; do
                 remove_overlay "spi0"
             else
                 add_overlay_if_missing "spi0"
-                configure_spi_frequency "spi0"
+                configure_spi_frequency
             fi
             ;;
         8) break;;
