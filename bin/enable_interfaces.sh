@@ -64,7 +64,7 @@ configure_uart_baud_rate() {
 
 display_gpio_table() {
     echo -e "\n==================== GPIO Pinout ========================================\n"
-    echo -e "               Name          \t   Pins              \t              Name"
+    echo -e "               Name          \t   Pins                          Name"
     echo -e "========================================================================="
     
     printf "\t${COLOR_VDD}SYS_3.3V\t\t\t1\t2\t${COLOR_VDD}VDD_5V${COLOR_RESET}\n"
@@ -78,15 +78,15 @@ display_gpio_table() {
     printf "\tSYS_3.3V\t\t\t17\t18\t${COLOR_UART}UART1_CTS${COLOR_RESET}/GPIOG9\n"
     printf "\t${COLOR_GPIO}SPI0_MOSI${COLOR_RESET}/GPIOC0\t\t19\t20\t${COLOR_VDD}GND${COLOR_RESET}\n"
     printf "\t${COLOR_GPIO}SPI0_MISO${COLOR_RESET}/GPIOC1\t\t21\t22\t${COLOR_UART}UART2_RX${COLOR_RESET}/GPIOA1\n"
-    printf "\t${COLOR_GPIO}SPI0_CLK${COLOR_RESET}/GPIOC2\t\t\t23\t24\t${COLOR_GPIO}SPI0_CS{COLOR_RESET}/GPIOC3$\n"
+    printf "\t${COLOR_GPIO}SPI0_CLK${COLOR_RESET}/GPIOC2\t\t\t23\t24\t${COLOR_GPIO}SPI0_CS${COLOR_RESET}/GPIOC3\n"
     printf "\t${COLOR_VDD}GND${COLOR_RESET}\t\t\t\t25\t26\tSPDIF-OUT/GPIOA17\n"
     printf "\t${COLOR_I2C}I2C1_SDA${COLOR_RESET}/GPIOA19\t\t27\t28\t${COLOR_I2C}I2C1_SCL${COLOR_RESET}/GPIOA18\n"
     printf "\tGPIOA20/PCM0_DOUT\t\t29\t30\t${COLOR_VDD}GND${COLOR_RESET}\n"
     printf "\tGPIOA21/PCM0_DIN\t\t31\t32\tGPIOA7\n"
     printf "\tGPIOA8\t\t\t\t33\t34\t${COLOR_VDD}GND${COLOR_RESET}\n"
-    printf "\t${COLOR_UART}UART3_CTS${COLOR_RESET}/SPI1_MISO/GPIOA16\t35\t36\t${COLOR_UART}UART3_TX${COLOR_RESET}/SPI1_CS/GPIOA13\n"
-    printf "\tGPIOA9\t\t\t\t37\t38\${COLOR_UART}tUART3_RTS${COLOR_RESET}/SPI1_MOSI/GPIOA15\n"
-    printf "\t${COLOR_VDD}GND${COLOR_RESET}\t\t\t\t39\t40\${COLOR_UART}tUART3_RX${COLOR_RESET}/SPI1_CLK/GPIOA14\n"
+    printf "\t${COLOR_UART}UART3_CTS${COLOR_RESET}/${COLOR_GPIO}SPI1_MISO${COLOR_RESET}/GPIOA16\t35\t36\t${COLOR_UART}UART3_TX${COLOR_RESET}/${COLOR_GPIO}SPI1_CS${COLOR_RESET}/GPIOA13\n"
+    printf "\tGPIOA9\t\t\t\t37\t38\t${COLOR_UART}UART3_RTS${COLOR_RESET}/${COLOR_GPIO}SPI1_MOSI${COLOR_RESET}/GPIOA15\n"
+    printf "\t${COLOR_VDD}GND${COLOR_RESET}\t\t\t\t39\t40\t${COLOR_UART}UART3_RX${COLOR_RESET}/${COLOR_GPIO}SPI1_CLK${COLOR_RESET}/GPIOA14\n"
     
     echo -e "=====================================================\n"
 }
