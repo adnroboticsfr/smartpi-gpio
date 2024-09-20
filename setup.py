@@ -8,11 +8,11 @@ class PostInstallCommand(install):
     def run(self):
         install.run(self)  # Run the default installation
         try:
-            # Use relative path to the script in the package
-            script_path = os.path.join(os.path.dirname(__file__), 'bin/activate_interfaces.sh')
+            # Make sure the script is available in /usr/local/bin/ after installation
+            script_path = '/usr/local/bin/activate_interfaces.sh'
             
-            # Make sure the script is executable
-            subprocess.run(['chmod', '+x', script_path], check=True)
+            # Ensure the script is executable
+            subprocess.run(['sudo', 'chmod', '+x', script_path], check=True)
 
             # Run the post-install script using sudo
             subprocess.run(['sudo', 'bash', script_path], check=True)
@@ -25,7 +25,7 @@ setup(
     description="GPIO management for Smart Pi One",
     author="ADNroboticsfr",
     packages=find_packages(),
-    scripts=['bin/gpio'],
+    scripts=['bin/gpio', 'bin/activate_interfaces.sh'],  # Make sure the script is included here
     install_requires=[
         'Flask>=2.0.0',
         'Pillow>=8.0.0',
