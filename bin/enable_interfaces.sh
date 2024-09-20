@@ -175,6 +175,8 @@ while true; do
             ;;
         8) break;;
     esac
+    # Pause for confirmation messages to be seen
+    sleep 3
 done
 
 # Show changes before reboot
