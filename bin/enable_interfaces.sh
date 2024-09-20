@@ -51,7 +51,7 @@ remove_configuration() {
     if [[ "$overlay" == "spi0" ]]; then
         sed -i "/^spi0_freq=/d" "$ARMBIAN_ENV"
         echo -e "\033[31mspi0_freq configuration removed from $ARMBIAN_ENV\033[0m"
-    elif [[ "$overlay" == uart* ]]; then
+    elif [[ "$overlay" == "uart1" || "$overlay" == "uart2" || "$overlay" == "uart3" ]]; then
         sed -i "/^${overlay}_baud=/d" "$ARMBIAN_ENV"
         echo -e "\033[31m${overlay}_baud configuration removed from $ARMBIAN_ENV\033[0m"
     fi
