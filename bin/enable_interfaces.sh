@@ -33,15 +33,42 @@ add_overlay_if_missing() {
     fi
 }
 
-# Function to remove an overlay
+# Function to remove an overlay and associated configurations (such as frequency)
 remove_overlay() {
     local overlay="$1"
+    
+    # Remove the overlay from the overlays line
     if grep -q "^overlays=" "$ARMBIAN_ENV"; then
         sed -i "/^overlays=/ s/ $overlay//" "$ARMBIAN_ENV"
         echo -e "\033[31m$overlay removed from the overlays line\033[0m"
-        sleep 3
     else
         echo "No overlays line found."
+    fi
+
+    # Remove any associated configuration (like frequency or baud rate)
+    if [[ "$overlay" == "spi0" ]]; then
+        remove_spi_configuration "spi0"
+    elif [[ "$overlay" == uart* ]]; then
+        remove_uart_configuration "$overlay"
+    fi
+    sleep 3
+}
+
+# Function to remove SPI frequency configuration
+remove_spi_configuration() {
+    local spi="$1"
+    if grep -q "^${spi}_freq=" "$ARMBIAN_ENV"; then
+        sed -i "/^${spi}_freq=/d" "$ARMBIAN_ENV"
+        echo -e "\033[31m${spi}_freq configuration removed from $ARMBIAN_ENV\033[0m"
+    fi
+}
+
+# Function to remove UART baud rate configuration
+remove_uart_configuration() {
+    local uart="$1"
+    if grep -q "^${uart}_baud=" "$ARMBIAN_ENV"; then
+        sed -i "/^${uart}_baud=/d" "$ARMBIAN_ENV"
+        echo -e "\033[31m${uart}_baud configuration removed from $ARMBIAN_ENV\033[0m"
     fi
 }
 
@@ -154,6 +181,7 @@ while true; do
         4) 
             if grep -q "uart1" "$ARMBIAN_ENV"; then
                 remove_overlay "uart1"
+                remove_uart_configuration "uart1"
             else
                 add_overlay_if_missing "uart1"
                 configure_uart_baud_rate "uart1"
@@ -162,6 +190,7 @@ while true; do
         5) 
             if grep -q "uart2" "$ARMBIAN_ENV"; then
                 remove_overlay "uart2"
+                remove_uart_configuration "uart2"
             else
                 add_overlay_if_missing "uart2"
                 configure_uart_baud_rate "uart2"
@@ -170,6 +199,7 @@ while true; do
         6) 
             if grep -q "uart3" "$ARMBIAN_ENV"; then
                 remove_overlay "uart3"
+                remove_uart_configuration "uart3"
             else
                 add_overlay_if_missing "uart3"
                 configure_uart_baud_rate "uart3"
@@ -178,6 +208,7 @@ while true; do
         7) 
             if grep -q "spi0" "$ARMBIAN_ENV"; then
                 remove_overlay "spi0"
+                remove_spi_configuration "spi0"
             else
                 add_overlay_if_missing "spi0"
                 configure_spi_frequency "spi0"
