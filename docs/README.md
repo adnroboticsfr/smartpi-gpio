@@ -1,8 +1,10 @@
 Documentation for the installation, update, and uninstallation of the smartpi-gpio library for the **[Smart Pi One](https://wanhao-europe.com/collections/yumi-smart-pi-nano-computer-diy/products/yumi-smart-pi-one-1g-ddr3-processeur-h3-allwinner** SBC from **Yumi**.
 
 ---
-<img src="https://github.com/adnroboticsfr/smartpi-gpio/blob/main/img/smart-pi-one-yumi.png" alt="Smart Pi One - Yumi" width="380"/>
+
 # SmartPi-GPIO Documentation
+
+<img src="https://github.com/adnroboticsfr/smartpi-gpio/blob/main/img/smart-pi-one-yumi.png" alt="Smart Pi One - Yumi" width="380"/>
 
 ## Table of Contents
 1. [Introduction](#introduction)
