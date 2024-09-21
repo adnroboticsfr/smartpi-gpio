@@ -1,11 +1,10 @@
-Documentation for the installation, update, and uninstallation of the smartpi-gpio library for the **Smart Pi One** SBC from **Yumi**.
-
----
-
 # SmartPi-GPIO Documentation
 
 <img src="https://github.com/adnroboticsfr/smartpi-gpio/blob/main/img/smart-pi-one-yumi.png" alt="Smart Pi One - Yumi" width="380"/>
 
+Documentation for the installation, update, and uninstallation of the smartpi-gpio library for the **Smart Pi One** SBC from **Yumi**.
+
+---
 ## Table of Contents
 1. [Introduction](#introduction)
 2. [Requirements](#requirements)
