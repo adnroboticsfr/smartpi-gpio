@@ -1,7 +1,4 @@
 # SmartPi-GPIO Documentation
-
-## Documentation
-
 <img src="https://github.com/adnroboticsfr/smartpi-gpio/blob/main/img/smart-pi-one-yumi.png" alt="Smart Pi One - Yumi" width="380"/>
 
 For complete documentation, including installation, configuration, and usage of the **SmartPi-GPIO** library, please visit our [official Wiki](https://github.com/adnroboticsfr/smartpi-gpio/wiki).
