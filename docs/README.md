@@ -1,4 +1,4 @@
-Voici une documentation complète pour **l'installation**, **la mise à jour** et **la désinstallation** de la bibliothèque **smartpi-gpio**, que vous pouvez intégrer à un dépôt GitHub.
+Documentation for the installation, update, and uninstallation of the smartpi-gpio library for the [Smart Pi One](https://wanhao-europe.com/collections/yumi-smart-pi-nano-computer-diy/products/yumi-smart-pi-one-1g-ddr3-processeur-h3-allwinner) SBC from Yumi
 
 ---
 
