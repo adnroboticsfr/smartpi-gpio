@@ -9,39 +9,44 @@ class PostInstallCommand(install):
     def run(self):
         install.run(self)  # Run the standard installation process
 
-        # Define the bin/ directory where your scripts are stored in your package
-        bin_scripts = ['bin/activate_interfaces.sh', 'bin/enable_interfaces.sh']
+        # Paths to the scripts in the bin/ directory
+        scripts = ['bin/gpio', 'bin/activate_interfaces.sh']
         
         # Destination folder in /usr/local/bin/
         dest_folder = '/usr/local/bin/'
 
-        # Copy each script to the destination folder
-        for script in bin_scripts:
+        for script in scripts:
             script_name = os.path.basename(script)
             dest_path = os.path.join(dest_folder, script_name)
 
             try:
-                # Check if the script exists in the package
                 if os.path.exists(script):
                     print(f"Copying {script_name} to {dest_path}")
+                    # Copy the script to /usr/local/bin/
                     shutil.copy(script, dest_path)
+                    # Make the script executable
                     subprocess.run(['chmod', '+x', dest_path], check=True)
                 else:
-                    print(f"Error: {script} not found in the package.")
+                    print(f"Error: The file {script} is not found.")
             except subprocess.CalledProcessError as e:
                 print(f"Error making {dest_path} executable: {e}")
             except Exception as e:
                 print(f"Error copying {script} to {dest_path}: {e}")
 
-        # Run enable_interfaces.sh at the end of installation
+        # Run enable_interfaces.sh only after installation is complete
         enable_script_path = os.path.join(dest_folder, 'enable_interfaces.sh')
         if os.path.exists(enable_script_path):
             try:
                 print(f"Executing {enable_script_path} at the end of installation")
                 subprocess.run(['bash', enable_script_path], check=True)
+
+                # Optionally, restart the system after running the script
+                restart = input("Installation complete. Do you want to restart now? (y/n): ")
+                if restart.lower() == 'y':
+                    print("Rebooting the system...")
+                    subprocess.run(['sudo', 'reboot'], check=True)
             except subprocess.CalledProcessError as e:
                 print(f"Error executing {enable_script_path}: {e}")
-
 
 setup(
     name="smartpi-gpio",
@@ -49,12 +54,8 @@ setup(
     description="GPIO management for Smart Pi One",
     author="ADNroboticsfr",
     packages=find_packages(),
-    package_data={
-        # Include the activate_interfaces.sh script in the package
-        '': ['bin/activate_interfaces.sh', 'bin/enable_interfaces.sh'],
-    },
     include_package_data=True,  # Ensure that package_data is included
-    scripts=['bin/gpio'],  # Include the gpio CLI script
+    scripts=['bin/gpio'],  # Include the gpio script
     install_requires=[
         'Flask>=2.0.0',
         'Pillow>=8.0.0',
