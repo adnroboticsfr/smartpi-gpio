@@ -1,6 +1,6 @@
 [build-system]
-requires = ["setuptools", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["setuptools", "wheel", "poetry-core"]
+build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "smartpi-gpio"
@@ -11,7 +11,18 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.7"
+Flask = "^2.0.0"
+Pillow = "^8.0.0"
+smbus2 = "^0.4.3"
+luma-core = "^1.0.0"
+luma-oled = "^1.0.0"
+colorama = "^0.4.6"
 
 [tool.poetry.scripts]
 gpio = "gpio.scripts:main"
 
+[tool.poetry.extras]
+enable_features = ["enable_features.sh", "activate_interfaces.sh"]
+
+[tool.poetry.install]
+include = ["bin/activate_interfaces.sh", "bin/enable_features.sh"]
