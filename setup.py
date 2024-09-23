@@ -14,7 +14,7 @@ class PostInstallCommand(install):
 
             print(f"Script path for activation: {activate_script_path}")
             print(f"Script path for enabling features: {enable_script_path}")
-
+        
             # Check if activate_interfaces.sh exists
             if os.path.exists(activate_script_path):
                 # Make the script executable
