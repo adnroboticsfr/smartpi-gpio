@@ -21,7 +21,7 @@ class PostInstallCommand(install):
                 subprocess.run(['chmod', '+x', activate_script_path], check=True)
 
                 # Execute the script
-                subprocess.run(['bash', activate_script_path], check=True)
+                subprocess.run(['python3', activate_script_path], check=True)
             else:
                 print(f"Error: The file {activate_script_path} is not found.")
 
