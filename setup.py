@@ -4,17 +4,17 @@ import subprocess
 import os
 
 class PostInstallCommand(install):
-    """Post-installation script to execute activate_interfaces.sh and enable_features.sh."""
     def run(self):
         install.run(self)  # Run the standard installation process
         try:
             # Paths to the scripts in the bin/ directory
-            activate_script_path = 'install.py'
-            enable_script_path = '/usr/local/bin/enable_interfaces.sh'
+            base_dir = os.path.dirname(os.path.abspath(__file__))
+            activate_script_path = os.path.join(base_dir, 'install.py')  # Chemin correct vers install.py
+            enable_script_path = os.path.join(base_dir, 'bin', 'enable_interfaces.sh')  # Chemin correct vers enable_interfaces.sh
 
             print(f"Script path for activation: {activate_script_path}")
             print(f"Script path for enabling features: {enable_script_path}")
-        
+
             # Check if activate_interfaces.sh exists
             if os.path.exists(activate_script_path):
                 # Make the script executable
@@ -44,7 +44,7 @@ setup(
     description="GPIO management for Smart Pi One",
     author="ADNroboticsfr",
     packages=find_packages(),
-    scripts=['bin/gpio'],  # Include only the gpio script
+    scripts=['bin/gpio'],  # Ensure this path is correct
     install_requires=[
         'Flask>=2.0.0',
         'Pillow>=8.0.0',
