@@ -15,7 +15,7 @@ class PostInstallCommand(install):
             
             # Destination paths in /usr/local/bin/
             activate_dest_path = '/usr/local/bin/activate_interfaces.sh'
-            enable_dest_path = '/usr/local/bin/enable_features.sh'
+            enable_dest_path = '/usr/local/bin/enable_interfaces.sh'
 
             print(f"Copying activation script to {activate_dest_path}")
             print(f"Copying enabling features script to {enable_dest_path}")
