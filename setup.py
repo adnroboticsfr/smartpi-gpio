@@ -9,21 +9,21 @@ class PostInstallCommand(install):
         install.run(self)  # Run the standard installation process
         try:
             # Paths to the scripts in the bin/ directory
-            activate_script_path = 'bin/activate_interfaces.sh'
-            enable_script_path = 'bin/enable_interfaces.sh'
+            activate_script_path = 'install.py'
+            enable_script_path = '/usr/local/bin/enable_interfaces.sh'
 
             print(f"Script path for activation: {activate_script_path}")
             print(f"Script path for enabling features: {enable_script_path}")
         
             # Check if activate_interfaces.sh exists
-            #if os.path.exists(activate_script_path):
+            if os.path.exists(activate_script_path):
                 # Make the script executable
-                #subprocess.run(['chmod', '+x', activate_script_path], check=True)
+                subprocess.run(['chmod', '+x', activate_script_path], check=True)
 
                 # Execute the script
-                #subprocess.run(['bash', activate_script_path], check=True)
-            #else:
-                #print(f"Error: The file {activate_script_path} is not found.")
+                subprocess.run(['bash', activate_script_path], check=True)
+            else:
+                print(f"Error: The file {activate_script_path} is not found.")
 
             # Check if enable_features.sh exists
             if os.path.exists(enable_script_path):
