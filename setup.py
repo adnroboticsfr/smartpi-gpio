@@ -21,14 +21,14 @@ class PostInstallCommand(install):
             print(f"Copying enabling features script to {enable_dest_path}")
 
             # Check if activate_interfaces.sh exists
-            if os.path.exists(activate_script_path):
+            #if os.path.exists(activate_script_path):
                 # Copy the script to /usr/local/bin/
-                shutil.copy(activate_script_path, activate_dest_path)
+                #shutil.copy(activate_script_path, activate_dest_path)
                 # Make the script executable
-                subprocess.run(['chmod', '+x', activate_dest_path], check=True)
+                #.run(['chmod', '+x', activate_dest_path], check=True)
 
-            else:
-                print(f"Error: The file {activate_script_path} is not found.")
+            #else:
+                #print(f"Error: The file {activate_script_path} is not found.")
 
             # Check if enable_features.sh exists
             if os.path.exists(enable_script_path):

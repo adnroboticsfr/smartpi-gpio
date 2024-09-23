@@ -22,7 +22,7 @@ colorama = "^0.4.6"
 gpio = "gpio.scripts:main"
 
 [tool.poetry.extras]
-enable_features = ["enable_interfaces.sh", "activate_interfaces.sh"]
+enable_features = ["enable_interfaces.sh"]
 
 [tool.poetry.install]
-include = ["bin/activate_interfaces.sh", "bin/enable_interfaces.sh"]
+include = ["bin/activate_interfaces.sh"]
