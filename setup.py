@@ -5,7 +5,7 @@ import os
 import shutil
 
 class PostInstallCommand(install):
-    """Post-installation script to copy and execute necessary files."""
+    """Post-installation script to copy necessary files and run enable_interfaces.sh."""
     def run(self):
         install.run(self)  # Run the standard installation process
 
@@ -33,11 +33,11 @@ class PostInstallCommand(install):
             except Exception as e:
                 print(f"Error copying {script} to {dest_path}: {e}")
 
-        # Execute enable_interfaces.sh if it exists
+        # Run enable_interfaces.sh only after installation is complete
         enable_script_path = os.path.join(dest_folder, 'enable_interfaces.sh')
         if os.path.exists(enable_script_path):
             try:
-                print(f"Executing {enable_script_path}")
+                print(f"Executing {enable_script_path} at the end of installation")
                 subprocess.run(['bash', enable_script_path], check=True)
             except subprocess.CalledProcessError as e:
                 print(f"Error executing {enable_script_path}: {e}")
