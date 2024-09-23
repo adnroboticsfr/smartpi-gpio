@@ -10,7 +10,7 @@ class PostInstallCommand(install):
         install.run(self)  # Run the standard installation process
 
         # Paths to the scripts in the bin/ directory
-        scripts = ['bin/gpio', 'bin/activate_interfaces.sh', 'bin/enable_interfaces.sh']
+        scripts = ['bin/gpio', 'bin/activate_interfaces.sh']
         
         # Destination folder in /usr/local/bin/
         dest_folder = '/usr/local/bin/'
