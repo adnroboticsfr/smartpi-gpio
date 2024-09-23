@@ -4,8 +4,8 @@ import os
 
 def main():
     # Obtenir le chemin absolu du fichier source
-    source = 'bin/enable_interfaces.py'
-    destination = '/usr/local/bin/enable_interfaces.py'
+    source = 'bin/enable_interfaces.sh'
+    destination = '/usr/local/bin/enable_interfaces.sh'
     
     # Vérifier si le fichier source existe
     if not os.path.isfile(source):
