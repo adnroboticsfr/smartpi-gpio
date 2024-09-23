@@ -20,12 +20,9 @@ colorama = "^0.4.6"
 
 [tool.poetry.scripts]
 gpio = "gpio.scripts:main"
-install = "install:main"  
 
 [tool.poetry.extras]
-enable_features = ["enable_interfaces", "activate_interfaces.sh"]
+enable_features = ["enable_interfaces.sh", "activate_interfaces.sh"]
 
-# Optionally, if you want to include scripts in your package, 
-# you can do this as part of the package configuration
-[tool.poetry.include]
-include = ["bin/activate_interfaces.sh", "bin/enable__interfaces"]
+[tool.poetry.install]
+include = ["bin/activate_interfaces.sh", "bin/enable_interfaces.sh"]
