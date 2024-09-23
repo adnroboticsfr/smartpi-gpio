@@ -34,19 +34,19 @@ class PostInstallCommand(install):
                 print(f"Error copying {script} to {dest_path}: {e}")
 
         # Run enable_interfaces.sh only after installation is complete
-        enable_script_path = os.path.join(dest_folder, 'enable_interfaces.sh')
-        if os.path.exists(enable_script_path):
-            try:
-                print(f"Executing {enable_script_path} at the end of installation")
-                subprocess.run(['bash', enable_script_path], check=True)
+        #enable_script_path = os.path.join(dest_folder, 'activate_interfaces.sh')
+        #if os.path.exists(enable_script_path):
+            #try:
+                #print(f"Executing {enable_script_path} at the end of installation")
+                #subprocess.run(['bash', enable_script_path], check=True)
 
                 # Optionally, restart the system after running the script
-                restart = input("Installation complete. Do you want to restart now? (y/n): ")
-                if restart.lower() == 'y':
-                    print("Rebooting the system...")
-                    subprocess.run(['sudo', 'reboot'], check=True)
-            except subprocess.CalledProcessError as e:
-                print(f"Error executing {enable_script_path}: {e}")
+                #restart = input("Installation complete. Do you want to restart now? (y/n): ")
+                #if restart.lower() == 'y':
+                    #print("Rebooting the system...")
+                    #subprocess.run(['sudo', 'reboot'], check=True)
+            #except subprocess.CalledProcessError as e:
+                #print(f"Error executing {enable_script_path}: {e}")
 
 setup(
     name="smartpi-gpio",
@@ -54,7 +54,7 @@ setup(
     description="GPIO management for Smart Pi One",
     author="ADNroboticsfr",
     packages=find_packages(),
-    include_package_data=True,  # Ensure that package_data is included
+    include_package_data=True,
     scripts=['bin/gpio'],  # Include the gpio script
     install_requires=[
         'Flask>=2.0.0',
