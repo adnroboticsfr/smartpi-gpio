@@ -2,7 +2,7 @@ import shutil
 import os
 
 def main():
-    source = os.path.join(os.path.dirname(__file__), 'bin', 'enable_interfaces')
+    source = 'bin/enable_interfaces'
     destination = '/usr/local/bin/enable_interfaces'
     
     # Copier le fichier
