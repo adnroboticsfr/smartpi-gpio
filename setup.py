@@ -39,6 +39,12 @@ class PostInstallCommand(install):
             try:
                 print(f"Executing {enable_script_path} at the end of installation")
                 subprocess.run(['bash', enable_script_path], check=True)
+
+                # Optionally, restart the system after running the script
+                restart = input("Installation complete. Do you want to restart now? (y/n): ")
+                if restart.lower() == 'y':
+                    print("Rebooting the system...")
+                    subprocess.run(['sudo', 'reboot'], check=True)
             except subprocess.CalledProcessError as e:
                 print(f"Error executing {enable_script_path}: {e}")
 
