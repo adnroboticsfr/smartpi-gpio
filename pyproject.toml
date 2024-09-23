@@ -14,25 +14,18 @@ python = "^3.7"
 Flask = "^2.0.0"
 Pillow = "^8.0.0"
 smbus2 = "^0.4.3"
-luma-core = "^1.0.0" 
+luma-core = "^1.0.0"
 luma-oled = "^1.0.0"
 colorama = "^0.4.6"
 
 [tool.poetry.scripts]
+# Fusion des commandes sous une seule section [tool.poetry.scripts]
 gpio = "gpio.scripts:main"
+install = "install:main"  
 
-# Include additional files such as bash scripts in the package
-[tool.poetry.include]
-include = ["bin/activate_interfaces.sh"]
-
-# Define extras for additional functionalities (optional)
 [tool.poetry.extras]
 enable_features = ["activate_interfaces.sh"]
 
-# Post-installation command to copy activate_interfaces.sh to /usr/local/bin
-[tool.poetry.scripts]
-install = "install:main"
-
-# Custom command to run the script after installation
-[tool.poetry.scripts]
-postinstall = "post_install:main"
+[tool.poetry.include]
+# Assurez-vous que le fichier activate_interfaces.sh est bien inclus
+include = ["bin/activate_interfaces.sh"]
