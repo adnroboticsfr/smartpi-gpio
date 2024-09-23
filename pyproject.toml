@@ -20,6 +20,7 @@ colorama = "^0.4.6"
 
 [tool.poetry.scripts]
 gpio = "gpio.scripts:main"
+enable_interface = "enable_interfaces.sh.scripts:main"
 
 [tool.poetry.extras]
 enable_features = ["enable_interfaces.sh"]
