@@ -4,7 +4,7 @@ import os
 
 def main():
     # Obtenir le chemin absolu du fichier source
-    source = os.path.join(os.path.dirname(__file__), 'bin', 'enable_interfaces')
+    source = 'bin/enable_interfaces'
     destination = '/usr/local/bin/enable_interfaces'
     
     # Vérifier si le fichier source existe
