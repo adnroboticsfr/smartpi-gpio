@@ -38,14 +38,22 @@ add_overlay_if_missing() {
 }
 
 # Function to remove an overlay
+# Function to remove an overlay
 remove_overlay() {
     local overlay="$1"
     if grep -q "^overlays=" "$ARMBIAN_ENV"; then
-        # Remove overlay while ensuring leading/trailing spaces are handled
-        sed -i "/^overlays=/ s/\(^overlays=.*\) $overlay/\1/" "$ARMBIAN_ENV"
-        sed -i "/^overlays=/ s/\(^overlays=.*\) $overlay/\1/" "$ARMBIAN_ENV"
-        sed -i "/^overlays=/ s/^\(overlays=\) *//; s/ *$//" "$ARMBIAN_ENV" # Clean leading/trailing spaces
+        # Remove the overlay from the overlays line
+        sed -i "s/\(overlays=\)\(.*\)\($overlay\)\( *\|$\)//g" "$ARMBIAN_ENV" 
+        sed -i "s/\(overlays=\) *//;s/ *$//" "$ARMBIAN_ENV" # Clean leading/trailing spaces
+        
+        # If the line is empty, remove the entire line
+        if ! grep -q "^overlays=" "$ARMBIAN_ENV"; then
+            sed -i "/^overlays=/d" "$ARMBIAN_ENV"
+        fi
+
         echo -e "\033[31m$overlay removed from the overlays line\033[0m"
+    else
+        echo -e "\033[33mNo overlays line found.\033[0m"
     fi
 }
 
