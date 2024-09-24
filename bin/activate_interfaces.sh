@@ -41,7 +41,7 @@ add_overlay_if_missing() {
 remove_overlay() {
     local overlay="$1"
     if grep -q "^overlays=" "$ARMBIAN_ENV"; then
-        sed -i "/^overlays=/ s/ $overlay//" "$ARMBIAN_ENV"
+        sed -i "/^overlays=/ s/=.*$/=/" "$ARMBIAN_ENV"
         echo -e "\033[31m$overlay removed from the overlays line\033[0m"
     fi
 }
