@@ -38,7 +38,6 @@ add_overlay_if_missing() {
 }
 
 # Function to remove an overlay
-# Function to remove an overlay
 remove_overlay() {
     local overlay="$1"
     if grep -q "^overlays=" "$ARMBIAN_ENV"; then
@@ -73,6 +72,7 @@ configure_uart_baud_rate() {
     fi
 }
 
+# Display the GPIO table
 display_gpio_table() {
     echo -e "\n======================--[ GPIO Pinout - SMART PI ONE ]--======================\n"
     echo -e "              Name          \t     Pins               Name"
@@ -102,9 +102,6 @@ display_gpio_table() {
     echo -e "=============================================================================\n"
 }
 
-
-
-
 # Function to show the dashboard
 show_dashboard() {
     clear
@@ -121,11 +118,6 @@ show_dashboard() {
 
 # Function to display the menu
 show_menu() {
-    COLOR_I2C="\033[32m"
-    COLOR_UART="\033[34m"
-    COLOR_VDD="\033[33m"
-    COLOR_GPIO="\033[35m"
-    COLOR_RESET="\033[0m"
     clear
     echo ""
     echo "-------------------------------------------------------------------"
@@ -137,97 +129,89 @@ show_menu() {
     echo "-------------------------------------------------------------------"
     echo "| No | Status | Interfaces                                        |"
     echo "-------------------------------------------------------------------"
-    echo "|  1 |  [$(if grep -q "pwm" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)]   | PWM (GPIO PIN to configure:servomotors,LEDs)      |"    
-    echo "|  2 |  [$(if grep -q "i2c1" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)]   | I2C1 (SDA: GPIOA19[27], SCL: GPIOA18[28])         |"
-    echo "|  3 |  [$(if grep -q "i2c2" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)]   | I2C2 (SDA: GPIOA12[3], SCL: GPIOA11[4])           |"
-    echo "|  4 |  [$(if grep -q "uart1" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)]   | UART1 (TX: GPIOG6[8], RX: GPIOG7[10])             |"
-    echo "|  5 |  [$(if grep -q "uart2" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)]   | UART2 (TX: GPIOA0[11], RX: GPIOA1[22])            |"
-    echo "|  6 |  [$(if grep -q "uart3" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)]   | UART3 (TX: GPIOA16[35], RX: GPIOA14[40])          |"
-    echo "|  7 |  [$(if grep -q "spi0" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)]   | SPI0 (MOSI: GPIOC0[19], MISO: GPIOC1[21])         |"
-    echo "-------------------------------------------------------------------"
-    echo "|  8 | Display GPIO Pinout                                        |"
-    echo "-------------------------------------------------------------------"
-    echo "|  9 | Exit                                                       |"
+    echo "|  1 |        | Enable/Disable PWM                                |"
+    echo "|  2 |        | Enable/Disable I2C                                |"
+    echo "|  3 |        | Enable/Disable UART (and configure baud rate)      |"
+    echo "|  4 |        | Enable/Disable SPI                                |"
+    echo "|  5 |        | Show GPIO Table                                   |"
+    echo "|  6 |        | Exit                                              |"
     echo "-------------------------------------------------------------------"
 }
 
-# Main loop to show the menu and process choices
-while true; do
-    show_dashboard
-    show_menu
-    read -p "Enter your choice (1-9): " choice
+# Main logic
+backup_armbian_env
 
+while true; do
+    show_menu
+    read -p "Enter your choice (1-6): " choice
+    
     if ! validate_input "$choice"; then
-        echo -e "\033[31mInvalid option. Please try again.\033[0m"
+        echo "Invalid choice, please enter a number between 1 and 6."
         continue
     fi
-
-    case $choice in
+    
+    case "$choice" in
         1)
-            if grep -q "pwm" "$ARMBIAN_ENV"; then
+            # Enable/Disable PWM
+            read -p "Do you want to enable or disable PWM? (e/d): " action
+            if [[ "$action" == "e" ]]; then
+                add_overlay_if_missing "pwm"
+            elif [[ "$action" == "d" ]]; then
                 remove_overlay "pwm"
             else
-                add_overlay_if_missing "pwm"
-            fi
-            ;; 
-
-        2) 
-            if grep -q "i2c1" "$ARMBIAN_ENV"; then
-                remove_overlay "i2c1"
-            else
-                add_overlay_if_missing "i2c1"
-            fi
-            ;;        
-
-        3) 
-            if grep -q "i2c2" "$ARMBIAN_ENV"; then
-                remove_overlay "i2c2"
-            else
-                add_overlay_if_missing "i2c2"
+                echo "Invalid option. Please enter 'e' to enable or 'd' to disable."
             fi
             ;;
-        4) 
-            if grep -q "uart1" "$ARMBIAN_ENV"; then
+        2)
+            # Enable/Disable I2C
+            read -p "Do you want to enable or disable I2C? (e/d): " action
+            if [[ "$action" == "e" ]]; then
+                add_overlay_if_missing "i2c0"
+            elif [[ "$action" == "d" ]]; then
+                remove_overlay "i2c0"
+            else
+                echo "Invalid option. Please enter 'e' to enable or 'd' to disable."
+            fi
+            ;;
+        3)
+            # Enable/Disable UART
+            read -p "Do you want to enable or disable UART? (e/d): " action
+            if [[ "$action" == "e" ]]; then
+                add_overlay_if_missing "uart1"
+                configure_uart_baud_rate "uart1"
+            elif [[ "$action" == "d" ]]; then
                 remove_overlay "uart1"
             else
-                add_overlay_if_missing "uart1"
+                echo "Invalid option. Please enter 'e' to enable or 'd' to disable."
             fi
             ;;
-        5) 
-            if grep -q "uart2" "$ARMBIAN_ENV"; then
-                remove_overlay "uart2"
-            else
-                add_overlay_if_missing "uart2"
-            fi
-            ;;
-        6) 
-            if grep -q "uart3" "$ARMBIAN_ENV"; then
-                remove_overlay "uart3"
-            else
-                add_overlay_if_missing "uart3"
-            fi
-            ;;
-        7) 
-            if grep -q "spi0" "$ARMBIAN_ENV"; then
+        4)
+            # Enable/Disable SPI
+            read -p "Do you want to enable or disable SPI? (e/d): " action
+            if [[ "$action" == "e" ]]; then
+                add_overlay_if_missing "spi0"
+            elif [[ "$action" == "d" ]]; then
                 remove_overlay "spi0"
             else
-                add_overlay_if_missing "spi0"
+                echo "Invalid option. Please enter 'e' to enable or 'd' to disable."
             fi
             ;;
-        8) 
+        5)
+            # Show GPIO table
             display_gpio_table
-            read -p "Press any key to return to the menu..."
             ;;
-        9) 
-            echo "Exiting..."
-            # Prompt for reboot
-            echo "System will reboot in 5 seconds to apply changes..."
-            sleep 5
-            reboot
+        6)
+            # Exit
+            echo "Exiting."
             break
             ;;
-        *)
-            echo -e "\033[31mInvalid option. Please try again.\033[0m"
-            ;;
     esac
+    
+    # Ask for restart after configuration changes
+    read -p "Do you want to restart to apply changes? (y/n): " restart
+    if [[ "$restart" == "y" ]]; then
+        echo "Rebooting system..."
+        reboot
+        break
+    fi
 done
