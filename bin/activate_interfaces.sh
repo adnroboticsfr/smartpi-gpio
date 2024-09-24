@@ -13,7 +13,7 @@ COLOR_RESET="\033[0m"
 # Function to create a backup of armbianEnv.txt
 backup_armbian_env() {
     cp "$ARMBIAN_ENV" "$BACKUP_ENV"
-    echo -e "\033[32mBackup of armbianEnv.txt created at $BACKUP_ENV\033[0m"
+    echo -e "${COLOR_I2C}Backup of armbianEnv.txt created at $BACKUP_ENV${COLOR_RESET}"
 }
 
 # Function to validate user input
@@ -27,13 +27,13 @@ add_overlay_if_missing() {
     if grep -q "^overlays=" "$ARMBIAN_ENV"; then
         if ! grep -q "$overlay" "$ARMBIAN_ENV"; then
             sed -i "/^overlays=/ s/$/ $overlay/" "$ARMBIAN_ENV"
-            echo -e "\033[32m$overlay added to the overlays line\033[0m"
+            echo -e "${COLOR_I2C}$overlay added to the overlays line${COLOR_RESET}"
         else
-            echo -e "\033[33m$overlay is already present in the overlays line\033[0m"
+            echo -e "${COLOR_VDD}$overlay is already present in the overlays line${COLOR_RESET}"
         fi
     else
         echo "overlays=$overlay" >> "$ARMBIAN_ENV"
-        echo -e "\033[32mOverlays line created with $overlay\033[0m"
+        echo -e "${COLOR_I2C}Overlays line created with $overlay${COLOR_RESET}"
     fi
 }
 
@@ -44,7 +44,7 @@ remove_overlay() {
         sed -i "/^overlays=/ s/\(.*\)$overlay\(.*\)/\1\2/" "$ARMBIAN_ENV"
         sed -i "/^overlays=/ s/  */ /g" "$ARMBIAN_ENV"  # Remove extra spaces
         sed -i "/^overlays=/ s/=\s*$//" "$ARMBIAN_ENV" # Remove '=' if no overlays remain
-        echo -e "\033[31m$overlay removed from the overlays line\033[0m"
+        echo -e "${COLOR_GPIO}$overlay removed from the overlays line${COLOR_RESET}"
     fi
 }
 
@@ -57,10 +57,10 @@ configure_uart_baud_rate() {
     
     if grep -q "^${uart}_baud=" "$ARMBIAN_ENV"; then
         sed -i "/^${uart}_baud=/ s/= .*/= $baud_rate/" "$ARMBIAN_ENV"
-        echo -e "\033[32m$uart baud rate updated to $baud_rate\033[0m"
+        echo -e "${COLOR_I2C}$uart baud rate updated to $baud_rate${COLOR_RESET}"
     else
         echo "${uart}_baud=$baud_rate" >> "$ARMBIAN_ENV"
-        echo -e "\033[32m${uart}_baud set to $baud_rate\033[0m"
+        echo -e "${COLOR_I2C}${uart}_baud set to $baud_rate${COLOR_RESET}"
     fi
 }
 
