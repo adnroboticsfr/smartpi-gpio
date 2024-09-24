@@ -91,6 +91,9 @@ display_gpio_table() {
     echo -e "=============================================================================\n"
 }
 
+
+
+
 # Function to show the dashboard
 show_dashboard() {
     clear
@@ -107,10 +110,15 @@ show_dashboard() {
 
 # Function to display the menu
 show_menu() {
+    COLOR_I2C="\033[32m"
+    COLOR_UART="\033[34m"
+    COLOR_VDD="\033[33m"
+    COLOR_GPIO="\033[35m"
+    COLOR_RESET="\033[0m"
     clear
     echo ""
     echo "-------------------------------------------------------------------"
-    echo "|           === Enable/Disable Interfaces Menu ===                |"
+    echo "|           === Enable/Disable Interfaces ===                     |"
     echo "-------------------------------------------------------------------"
     echo ""
     echo "Please select options to enable or disable, and choose an interface "
@@ -121,76 +129,94 @@ show_menu() {
     echo "|  1 |  [$(if grep -q "pwm" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)]   | PWM (GPIO PIN to configure:servomotors,LEDs)      |"    
     echo "|  2 |  [$(if grep -q "i2c1" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)]   | I2C1 (SDA: GPIOA19[27], SCL: GPIOA18[28])         |"
     echo "|  3 |  [$(if grep -q "i2c2" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)]   | I2C2 (SDA: GPIOA12[3], SCL: GPIOA11[4])           |"
-    echo "|  4 |  [$(if grep -q "spi" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)]   | SPI (CS: GPIOC3[26], MOSI: GPIOC0[19], MISO: GPIOC1[21], CLK: GPIOC2[23]) |"
-    echo "|  5 |  [$(if grep -q "uart" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)]   | UART (TX: GPIOG6[8], RX: GPIOG7[10])               |"
+    echo "|  4 |  [$(if grep -q "uart1" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)]   | UART1 (TX: GPIOG6[8], RX: GPIOG7[10])             |"
+    echo "|  5 |  [$(if grep -q "uart2" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)]   | UART2 (TX: GPIOA0[11], RX: GPIOA1[22])            |"
+    echo "|  6 |  [$(if grep -q "uart3" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)]   | UART3 (TX: GPIOA16[35], RX: GPIOA14[40])          |"
+    echo "|  7 |  [$(if grep -q "spi0" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)]   | SPI0 (MOSI: GPIOC0[19], MISO: GPIOC1[21])         |"
     echo "-------------------------------------------------------------------"
-    echo "Please enter your choice (1-5) or 'q' to quit:"
+    echo "|  8 | Display GPIO Pinout                                        |"
+    echo "-------------------------------------------------------------------"
+    echo "|  9 | Exit                                                       |"
+    echo "-------------------------------------------------------------------"
 }
 
-# Main loop
+# Main loop to show the menu and process choices
 while true; do
+    show_dashboard
     show_menu
-    read -t 5 -n 1 option
+    read -p "Enter your choice (1-9): " choice
 
-    if [[ $option == 'q' ]]; then
-        echo "Exiting menu."
-        exit 0
-    elif validate_input "$option"; then
-        case $option in
-            1)
-                if grep -q "pwm" "$ARMBIAN_ENV"; then
-                    echo "Disabling PWM."
-                    remove_overlay "pwm"
-                else
-                    echo "Enabling PWM."
-                    add_overlay_if_missing "pwm"
-                fi
-                ;;
-            2)
-                if grep -q "i2c1" "$ARMBIAN_ENV"; then
-                    echo "Disabling I2C1."
-                    remove_overlay "i2c1"
-                else
-                    echo "Enabling I2C1."
-                    add_overlay_if_missing "i2c1"
-                fi
-                ;;
-            3)
-                if grep -q "i2c2" "$ARMBIAN_ENV"; then
-                    echo "Disabling I2C2."
-                    remove_overlay "i2c2"
-                else
-                    echo "Enabling I2C2."
-                    add_overlay_if_missing "i2c2"
-                fi
-                ;;
-            4)
-                if grep -q "spi" "$ARMBIAN_ENV"; then
-                    echo "Disabling SPI."
-                    remove_overlay "spi"
-                else
-                    echo "Enabling SPI."
-                    add_overlay_if_missing "spi"
-                fi
-                ;;
-            5)
-                if grep -q "uart" "$ARMBIAN_ENV"; then
-                    echo "Disabling UART."
-                    remove_overlay "uart"
-                else
-                    echo "Enabling UART."
-                    add_overlay_if_missing "uart"
-                fi
-                ;;
-            *)
-                echo "Invalid option."
-                ;;
-        esac
-        sleep 1
-    else
-        echo "Invalid input. Please enter a number from 1 to 5."
-        sleep 1
+    if ! validate_input "$choice"; then
+        echo -e "\033[31mInvalid option. Please try again.\033[0m"
+        continue
     fi
 
-    show_dashboard
+    case $choice in
+        1)
+            if grep -q "pwm" "$ARMBIAN_ENV"; then
+                remove_overlay "pwm"
+            else
+                add_overlay_if_missing "pwm"
+            fi
+            ;; 
+
+        2) 
+            if grep -q "i2c1" "$ARMBIAN_ENV"; then
+                remove_overlay "i2c1"
+            else
+                add_overlay_if_missing "i2c1"
+            fi
+            ;;        
+
+        3) 
+            if grep -q "i2c2" "$ARMBIAN_ENV"; then
+                remove_overlay "i2c2"
+            else
+                add_overlay_if_missing "i2c2"
+            fi
+            ;;
+        4) 
+            if grep -q "uart1" "$ARMBIAN_ENV"; then
+                remove_overlay "uart1"
+            else
+                add_overlay_if_missing "uart1"
+            fi
+            ;;
+        5) 
+            if grep -q "uart2" "$ARMBIAN_ENV"; then
+                remove_overlay "uart2"
+            else
+                add_overlay_if_missing "uart2"
+            fi
+            ;;
+        6) 
+            if grep -q "uart3" "$ARMBIAN_ENV"; then
+                remove_overlay "uart3"
+            else
+                add_overlay_if_missing "uart3"
+            fi
+            ;;
+        7) 
+            if grep -q "spi0" "$ARMBIAN_ENV"; then
+                remove_overlay "spi0"
+            else
+                add_overlay_if_missing "spi0"
+            fi
+            ;;
+        8) 
+            display_gpio_table
+            read -p "Press any key to return to the menu..."
+            ;;
+        9) 
+            echo "Exiting..."
+            # Prompt for reboot
+            echo "System will reboot in 5 seconds to apply changes..."
+            sleep 5
+            reboot
+            break
+            ;;
+        *)
+            echo -e "\033[31mInvalid option. Please try again.\033[0m"
+            ;;
+    esac
 done
