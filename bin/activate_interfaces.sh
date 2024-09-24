@@ -40,11 +40,48 @@ add_overlay_if_missing() {
 # Function to remove an overlay
 remove_overlay() {
     local overlay="$1"
+
+    # Remove the overlay from the overlays line
     if grep -q "^overlays=" "$ARMBIAN_ENV"; then
         sed -i "/^overlays=/ s/=.*$/=/" "$ARMBIAN_ENV"
         echo -e "\033[31m$overlay removed from the overlays line\033[0m"
     fi
 }
+
+# Function to remove SPI frequency configuration
+remove_spi_configuration() {
+    local spi="$1"
+    if grep -q "^${spi}_freq=" "$ARMBIAN_ENV"; then
+        sed -i "/^${spi}_freq=/d" "$ARMBIAN_ENV"
+        echo -e "\033[31m${spi}_freq configuration removed from $ARMBIAN_ENV\033[0m"
+    fi
+}
+
+# Function to remove UART baud rate configuration
+remove_uart_configuration() {
+    local uart="$1"
+    if grep -q "^${uart}_baud=" "$ARMBIAN_ENV"; then
+        sed -i "/^${uart}_baud=/d" "$ARMBIAN_ENV"
+        echo -e "\033[31m${uart}_baud configuration removed from $ARMBIAN_ENV\033[0m"
+    fi
+}
+# Function to remove UART baud rate configuration
+#remove_uart_configuration() {
+    #local uart="$1"
+    
+    # Create a temporary file
+    #local temp_file=$(mktemp)
+
+    # Remove lines corresponding to the specified UART baud rate
+    #while IFS= read -r line; do
+        #if [[ "$line" != "${uart}_baud="* ]]; then
+            #echo "$line" >> "$temp_file"
+        #fi
+    #done < "$ARMBIAN_ENV"
+    
+    # Move temp file to original file
+    #mv "$temp_file" "$ARMBIAN_ENV"
+#}
 
 # Function to configure UART baud rate
 configure_uart_baud_rate() {
@@ -59,6 +96,25 @@ configure_uart_baud_rate() {
     else
         echo "${uart}_baud=$baud_rate" >> "$ARMBIAN_ENV"
         echo -e "\033[32m${uart}_baud set to $baud_rate\033[0m"
+    fi
+}
+
+# Function to configure SPI frequency
+configure_spi_frequency() {
+    local spi="$1"
+    echo "Configuring frequency for $spi."
+    read -p "Enter frequency for $spi (default is 500000, or press Enter to keep): " frequency
+    frequency=${frequency:-500000}
+    
+    # Update the frequency configuration
+    if grep -q "^${spi}_freq=" "$ARMBIAN_ENV"; then
+        sed -i "/^${spi}_freq=/ s/= .*/= $frequency/" "$ARMBIAN_ENV"
+        echo -e "\033[32m$spi frequency updated to $frequency\033[0m"
+        sleep 3
+    else
+        echo "${spi}_freq=$frequency" >> "$ARMBIAN_ENV"
+        echo -e "\033[32m${spi}_freq set to $frequency\033[0m"
+        sleep 3
     fi
 }
 
@@ -118,7 +174,7 @@ show_menu() {
     clear
     echo ""
     echo "-------------------------------------------------------------------"
-    echo "|           === Enable/Disable Interfaces Menu ===                |"
+    echo "|           === Enable/Disable Interfaces ===                     |"
     echo "-------------------------------------------------------------------"
     echo ""
     echo "Please select options to enable or disable, and choose an interface "
@@ -180,6 +236,7 @@ while true; do
                 remove_overlay "uart1"
             else
                 add_overlay_if_missing "uart1"
+                configure_uart_baud_rate "uart1"
             fi
             ;;
         5) 
@@ -187,6 +244,7 @@ while true; do
                 remove_overlay "uart2"
             else
                 add_overlay_if_missing "uart2"
+                configure_uart_baud_rate "uart2"
             fi
             ;;
         6) 
@@ -194,6 +252,7 @@ while true; do
                 remove_overlay "uart3"
             else
                 add_overlay_if_missing "uart3"
+                configure_uart_baud_rate "uart3"
             fi
             ;;
         7) 
@@ -201,6 +260,7 @@ while true; do
                 remove_overlay "spi0"
             else
                 add_overlay_if_missing "spi0"
+                configure_spi_frequency "spi0"
             fi
             ;;
         8) 
