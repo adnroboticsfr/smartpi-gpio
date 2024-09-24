@@ -13,12 +13,12 @@ COLOR_RESET="\033[0m"
 # Function to create a backup of armbianEnv.txt
 backup_armbian_env() {
     cp "$ARMBIAN_ENV" "$BACKUP_ENV"
-    echo -e "${COLOR_I2C}Backup of armbianEnv.txt created at $BACKUP_ENV${COLOR_RESET}"
+    echo -e "\033[32mBackup of armbianEnv.txt created at $BACKUP_ENV\033[0m"
 }
 
 # Function to validate user input
 validate_input() {
-    [[ $1 =~ ^[1-5]$ ]]
+    [[ $1 =~ ^[1-9]$ ]]
 }
 
 # Function to add an overlay if it is not already present
@@ -27,13 +27,13 @@ add_overlay_if_missing() {
     if grep -q "^overlays=" "$ARMBIAN_ENV"; then
         if ! grep -q "$overlay" "$ARMBIAN_ENV"; then
             sed -i "/^overlays=/ s/$/ $overlay/" "$ARMBIAN_ENV"
-            echo -e "${COLOR_I2C}$overlay added to the overlays line${COLOR_RESET}"
+            echo -e "\033[32m$overlay added to the overlays line\033[0m"
         else
-            echo -e "${COLOR_VDD}$overlay is already present in the overlays line${COLOR_RESET}"
+            echo -e "\033[33m$overlay is already present in the overlays line\033[0m"
         fi
     else
         echo "overlays=$overlay" >> "$ARMBIAN_ENV"
-        echo -e "${COLOR_I2C}Overlays line created with $overlay${COLOR_RESET}"
+        echo -e "\033[32mOverlays line created with $overlay\033[0m"
     fi
 }
 
@@ -41,10 +41,8 @@ add_overlay_if_missing() {
 remove_overlay() {
     local overlay="$1"
     if grep -q "^overlays=" "$ARMBIAN_ENV"; then
-        sed -i "/^overlays=/ s/\(.*\)$overlay\(.*\)/\1\2/" "$ARMBIAN_ENV"
-        sed -i "/^overlays=/ s/  */ /g" "$ARMBIAN_ENV"  # Remove extra spaces
-        sed -i "/^overlays=/ s/=\s*$//" "$ARMBIAN_ENV" # Remove '=' if no overlays remain
-        echo -e "${COLOR_GPIO}$overlay removed from the overlays line${COLOR_RESET}"
+        sed -i "/^overlays=/ s/ $overlay//" "$ARMBIAN_ENV"
+        echo -e "\033[31m$overlay removed from the overlays line\033[0m"
     fi
 }
 
@@ -57,11 +55,40 @@ configure_uart_baud_rate() {
     
     if grep -q "^${uart}_baud=" "$ARMBIAN_ENV"; then
         sed -i "/^${uart}_baud=/ s/= .*/= $baud_rate/" "$ARMBIAN_ENV"
-        echo -e "${COLOR_I2C}$uart baud rate updated to $baud_rate${COLOR_RESET}"
+        echo -e "\033[32m$uart baud rate updated to $baud_rate\033[0m"
     else
         echo "${uart}_baud=$baud_rate" >> "$ARMBIAN_ENV"
-        echo -e "${COLOR_I2C}${uart}_baud set to $baud_rate${COLOR_RESET}"
+        echo -e "\033[32m${uart}_baud set to $baud_rate\033[0m"
     fi
+}
+
+display_gpio_table() {
+    echo -e "\n======================--[ GPIO Pinout - SMART PI ONE ]--======================\n"
+    echo -e "              Name          \t     Pins               Name"
+    echo -e "=============================================================================="
+    
+    printf "\t${COLOR_VDD}    SYS_3.3V${COLOR_RESET}\t\t( 1 )\t( 2 )\t       ${COLOR_VDD}VDD_5V${COLOR_RESET}\n"
+    printf "\t${COLOR_I2C}I2C0_SDA${COLOR_RESET}/GPIOA12\t( 3 )\t( 4 )\t       ${COLOR_VDD}VDD_5V${COLOR_RESET}\n"
+    printf "\t${COLOR_I2C}I2C0_SCL${COLOR_RESET}/GPIOA11\t( 5 )\t( 6 )\t         ${COLOR_VDD}GND${COLOR_RESET}\n"
+    printf "\t     GPIOG11\t\t( 7 )\t( 8 )\t   ${COLOR_UART}UART1_TX${COLOR_RESET}/GPIOG6\n"
+    printf "\t      ${COLOR_VDD}GND${COLOR_RESET}\t\t( 9 )\t( 10 )\t   ${COLOR_UART}UART1_RX${COLOR_RESET}/GPIOG7\n"
+    printf "\t${COLOR_UART}UART2_TX${COLOR_RESET}/GPIOA0\t\t( 11 )\t( 12 )\t        GPIOA6\n"
+    printf "\t${COLOR_UART}UART2_RTS${COLOR_RESET}/GPIOA2\t( 13 )\t( 14 )\t         ${COLOR_VDD}GND${COLOR_RESET}\n"
+    printf "\t${COLOR_UART}UART2_CTS${COLOR_RESET}/GPIOA3\t( 15 )\t( 16 )\t   ${COLOR_UART}UART1_RTS${COLOR_RESET}/GPIOG8\n"
+    printf "\t${COLOR_VDD}    SYS_3.3V${COLOR_RESET}\t\t( 17 )\t( 18 )\t   ${COLOR_UART}UART1_CTS${COLOR_RESET}/GPIOG9\n"
+    printf "\t${COLOR_GPIO}SPI0_MOSI${COLOR_RESET}/GPIOC0\t( 19 )\t( 20 )\t         ${COLOR_VDD}GND${COLOR_RESET}\n"
+    printf "\t${COLOR_GPIO}SPI0_MISO${COLOR_RESET}/GPIOC1\t( 21 )\t( 22 )\t   ${COLOR_UART}UART2_RX${COLOR_RESET}/GPIOA1\n"
+    printf "\t${COLOR_GPIO}SPI0_CLK${COLOR_RESET}/GPIOC2\t\t( 23 )\t( 24 )\t   ${COLOR_GPIO}SPI0_CS${COLOR_RESET}/GPIOC3\n"
+    printf "\t      ${COLOR_VDD}GND${COLOR_RESET}\t\t( 25 )\t( 26 )\t   SPDIF-OUT/GPIOA17\n"
+    printf "\t${COLOR_I2C}I2C1_SDA${COLOR_RESET}/GPIOA19\t( 27 )\t( 28 )\t   ${COLOR_I2C}I2C1_SCL${COLOR_RESET}/GPIOA18\n"
+    printf "\tGPIOA20/PCM0_DOUT\t( 29 )\t( 30 )\t         ${COLOR_VDD}GND${COLOR_RESET}\n"
+    printf "\tGPIOA21/PCM0_DIN\t( 31 )\t( 32 )\t        GPIOA7\n"
+    printf "\t     GPIOA8\t\t( 33 )\t( 34 )\t         ${COLOR_VDD}GND${COLOR_RESET}\n"
+    printf "   ${COLOR_UART}UART3_CTS${COLOR_RESET}/${COLOR_GPIO}SPI1_MISO${COLOR_RESET}/GPIOA16\t( 35 )\t( 36 )  ${COLOR_UART}UART3_TX${COLOR_RESET}/${COLOR_GPIO}SPI1_CS${COLOR_RESET}/GPIOA13\n"
+    printf "\t     GPIOA9\t\t( 37 )\t( 38 )  ${COLOR_UART}UART3_RTS${COLOR_RESET}/${COLOR_GPIO}SPI1_MOSI${COLOR_RESET}/GPIOA15\n"
+    printf "\t      ${COLOR_VDD}GND${COLOR_RESET}\t\t( 39 )\t( 40 )  ${COLOR_UART}UART3_RX${COLOR_RESET}/${COLOR_GPIO}SPI1_CLK${COLOR_RESET}/GPIOA14\n"
+    
+    echo -e "=============================================================================\n"
 }
 
 # Function to show the dashboard
@@ -91,7 +118,7 @@ show_menu() {
     echo "-------------------------------------------------------------------"
     echo "| No | Status | Interfaces                                        |"
     echo "-------------------------------------------------------------------"
-    echo "|  1 |  [$(if grep -q "pwm" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)]   | PWM (GPIO PIN to configure: servomotors, LEDs)      |"    
+    echo "|  1 |  [$(if grep -q "pwm" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)]   | PWM (GPIO PIN to configure:servomotors,LEDs)      |"    
     echo "|  2 |  [$(if grep -q "i2c1" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)]   | I2C1 (SDA: GPIOA19[27], SCL: GPIOA18[28])         |"
     echo "|  3 |  [$(if grep -q "i2c2" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)]   | I2C2 (SDA: GPIOA12[3], SCL: GPIOA11[4])           |"
     echo "|  4 |  [$(if grep -q "spi" "$ARMBIAN_ENV"; then echo "X"; else echo " "; fi)]   | SPI (CS: GPIOC3[26], MOSI: GPIOC0[19], MISO: GPIOC1[21], CLK: GPIOC2[23]) |"
