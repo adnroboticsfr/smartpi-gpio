@@ -281,20 +281,22 @@ while true; do
     esac
 done
 
+# Message indiquant le redémarrage imminent
 echo -e "\033[33mSystem will reboot in a moment to apply changes...\033[0m"
 echo "Press any key to cancel the reboot."
 
-
+# Boucle pour vérifier si une touche est pressée
 while true; do
-    echo -n "."
-    sleep 1
+    echo -n "."  # Affiche des points de manière continue
+    sleep 1  # Attente d'une seconde entre chaque point
+    
+    # Vérifie si une touche a été pressée
     if read -t 0.1 -n 1; then
         echo -e "\n\033[31mReboot canceled.\033[0m"
-        break
+        exit 1  # Sort de la boucle avec un statut d'erreur pour indiquer l'annulation
     fi
 done
 
-if [ $? -eq 0 ]; then
-    echo "Rebooting now..."
-    reboot
-fi
+# Si la boucle se termine sans interruption, le système redémarre
+echo "Rebooting now..."
+reboot
