@@ -41,12 +41,18 @@ add_overlay_if_missing() {
 remove_overlay() {
     local overlay="$1"
 
-    # Remove the overlay from the overlays line
-    if grep -q "^overlays=" "$ARMBIAN_ENV"; then
-        sed -i "/^overlays=/ s/=.*$/=/" "$ARMBIAN_ENV"
+    # Vérifie si l'overlay existe dans la ligne overlays et le supprime
+    if grep -q "^overlays=.*\b$overlay\b" "$ARMBIAN_ENV"; then
+        # Supprime uniquement la valeur sélectionnée (overlay spécifique)
+        sed -i "/^overlays=/ s/\b$overlay\b//" "$ARMBIAN_ENV"
+        # Nettoie les espaces inutiles après la suppression
+        sed -i "s/  / /g; s/= /=/g" "$ARMBIAN_ENV"
         echo -e "\033[31m$overlay removed from the overlays line\033[0m"
+    else
+        echo -e "\033[33m$overlay not found in the overlays line\033[0m"
     fi
 }
+
 
 # Function to remove SPI frequency configuration
 remove_spi_configuration() {
@@ -65,23 +71,7 @@ remove_uart_configuration() {
         echo -e "\033[31m${uart}_baud configuration removed from $ARMBIAN_ENV\033[0m"
     fi
 }
-# Function to remove UART baud rate configuration
-#remove_uart_configuration() {
-    #local uart="$1"
-    
-    # Create a temporary file
-    #local temp_file=$(mktemp)
 
-    # Remove lines corresponding to the specified UART baud rate
-    #while IFS= read -r line; do
-        #if [[ "$line" != "${uart}_baud="* ]]; then
-            #echo "$line" >> "$temp_file"
-        #fi
-    #done < "$ARMBIAN_ENV"
-    
-    # Move temp file to original file
-    #mv "$temp_file" "$ARMBIAN_ENV"
-#}
 
 # Function to configure UART baud rate
 configure_uart_baud_rate() {
@@ -282,21 +272,26 @@ while true; do
 done
 
 # Message indiquant le redémarrage imminent
-echo -e "\033[33mSystem will reboot in a moment to apply changes...\033[0m"
+echo -e "\033[33mSystem will reboot in 5 seconds to apply changes...\033[0m"
 echo "Press any key to cancel the reboot."
 
-# Boucle pour vérifier si une touche est pressée
-while true; do
+# Initialisation du compte à rebours
+timeout=5
+
+# Boucle pour vérifier si une touche est pressée durant les 5 secondes
+while [ $timeout -gt 0 ]; do
     echo -n "."  # Affiche des points de manière continue
     sleep 1  # Attente d'une seconde entre chaque point
-    
+    timeout=$((timeout - 1))  # Réduction du compte à rebours
+
     # Vérifie si une touche a été pressée
     if read -t 0.1 -n 1; then
         echo -e "\n\033[31mReboot canceled.\033[0m"
-        exit 1  # Sort de la boucle avec un statut d'erreur pour indiquer l'annulation
+        exit 1  # Sort de la boucle et du script si une touche est pressée
     fi
 done
 
-# Si la boucle se termine sans interruption, le système redémarre
-echo "Rebooting now..."
+# Si aucune touche n'est pressée après 5 secondes, le système redémarre
+echo -e "\nRebooting now..."
 reboot
+
