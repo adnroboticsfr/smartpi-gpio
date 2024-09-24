@@ -118,7 +118,7 @@ show_menu() {
     clear
     echo ""
     echo "-------------------------------------------------------------------"
-    echo "|           === Enable/Disable Interfaces ===                     |"
+    echo "|           === Enable/Disable Interfaces Menu ===                |"
     echo "-------------------------------------------------------------------"
     echo ""
     echo "Please select options to enable or disable, and choose an interface "
@@ -211,8 +211,14 @@ while true; do
             echo "Exiting..."
             # Prompt for reboot
             echo "System will reboot in 5 seconds to apply changes..."
-            sleep 5
-            reboot
+            echo "Press any key to cancel the reboot."
+            sleep 5 & wait $!
+            if [ $? -eq 0 ]; then
+                echo "Reboot canceled."
+            else
+                echo "Rebooting now to apply changes..."
+                reboot
+            fi
             break
             ;;
         *)
