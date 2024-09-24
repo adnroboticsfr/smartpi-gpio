@@ -273,16 +273,6 @@ while true; do
             ;;
         9) 
             echo "Exiting..."
-            # Prompt for reboot
-            echo "System will reboot in 5 seconds to apply changes..."
-            echo "Press any key to cancel the reboot."
-            sleep 5 & wait $!
-            if [ $? -eq 0 ]; then
-                echo "Reboot canceled."
-            else
-                echo "Rebooting now to apply changes..."
-                reboot
-            fi
             break
             ;;
         *)
@@ -290,3 +280,21 @@ while true; do
             ;;
     esac
 done
+
+echo -e "\033[33mSystem will reboot in a moment to apply changes...\033[0m"
+echo "Press any key to cancel the reboot."
+
+
+while true; do
+    echo -n "."
+    sleep 1
+    if read -t 0.1 -n 1; then
+        echo -e "\n\033[31mReboot canceled.\033[0m"
+        break
+    fi
+done
+
+if [ $? -eq 0 ]; then
+    echo "Rebooting now..."
+    reboot
+fi
