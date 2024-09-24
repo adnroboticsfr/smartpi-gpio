@@ -68,7 +68,6 @@ display_gpio_table() {
     echo -e "=============================================================================="
     
     printf "\t${COLOR_VDD}    SYS_3.3V${COLOR_RESET}\t\t( 1 )\t( 2 )\t       ${COLOR_VDD}VDD_5V${COLOR_RESET}\n"
-    printf "\t${COLOR_I2C}I2C0_SDA${COLOR_RESET}/GPIOA12\t( 3 )\t( 4 )\t       ${COLOR_VDD}VDD_5V${COLOR_RESET}\n"
     printf "\t${COLOR_I2C}I2C0_SCL${COLOR_RESET}/GPIOA11\t( 5 )\t( 6 )\t         ${COLOR_VDD}GND${COLOR_RESET}\n"
     printf "\t     GPIOG11\t\t( 7 )\t( 8 )\t   ${COLOR_UART}UART1_TX${COLOR_RESET}/GPIOG6\n"
     printf "\t      ${COLOR_VDD}GND${COLOR_RESET}\t\t( 9 )\t( 10 )\t   ${COLOR_UART}UART1_RX${COLOR_RESET}/GPIOG7\n"
