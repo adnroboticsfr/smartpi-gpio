@@ -98,6 +98,65 @@ class GPIO:
             print(f"Error reading value from pin {gpio_pin}: {e}")
             raise
 
+    def version(self):
+        print("smartpi-gpio version 1.0.0")
+
+    def display_gpio_table(self):
+        width = 11  
+
+        def truncate(text, max_length):
+            if isinstance(text, str) and len(text) > max_length:
+                return text[:max_length-1] + "…"  
+            return text
+
+        def color_text(text, is_bcm_or_board=False):
+            if "5V" in text or "3.3V" in text:
+                return f"{Fore.RED}{text}{Style.RESET_ALL}"
+            elif "GPIO" in text and not is_bcm_or_board:
+                return f"{Fore.GREEN}{text}{Style.RESET_ALL}"
+            return text
+
+        header = f"| {'LINUX gpio':^{width}} | {'Name':^{width}} | {'Board(PIN)':^{width}} | {'Board(PIN)':^{width}} | {'Name':^{width}} | {'LINUX gpio':^{width}} |"
+        
+        print("")
+        print("-" * len(header))
+        print(" ".center((width * 3) + 1) + "GPIO - Smart Pi One")
+        print("-" * len(header))
+        print(header)
+        print("-" * len(header))
+
+        odd_pins = [(Pins.BCM_PINS.get(pin, ""), Pins.NAME_PINS.get(pin, ""), "( "+str(pin)+" )") for pin in sorted(Pins.NAME_PINS.keys()) if pin % 2 != 0]
+        even_pins = [(Pins.BCM_PINS.get(pin, ""), Pins.NAME_PINS.get(pin, ""), "( "+str(pin)+" )") for pin in sorted(Pins.NAME_PINS.keys()) if pin % 2 == 0]
+
+        max_lines = max(len(odd_pins), len(even_pins))
+
+        for i in range(max_lines):
+            if i < len(odd_pins):
+                bcm_odd, name_odd, board_odd = odd_pins[i]
+            else:
+                bcm_odd = name_odd = board_odd = ""
+
+            if i < len(even_pins):
+                bcm_even, name_even, board_even = even_pins[i]
+            else:
+                bcm_even = name_even = board_even = ""
+
+            name_odd = truncate(name_odd, width)
+            name_even = truncate(name_even, width)
+
+            line = f"| {bcm_odd:^{width}} | {name_odd:^{width}} | {board_odd:^{width}} | {board_even:^{width}} | {name_even:^{width}} | {bcm_even:^{width}} |"
+            
+            colored_line = line.replace(name_odd, color_text(name_odd)).replace(name_even, color_text(name_even))
+            colored_line = colored_line.replace(bcm_odd, color_text(bcm_odd, True)).replace(bcm_even, color_text(bcm_even, True))
+            
+            print(colored_line)
+        
+        print("-" * len(header))
+
+    def read_all(self):
+        self.display_gpio_table()
+
+
     def toggle(self, pin_number):
         current_value = self.read(pin_number)
         new_value = GPIO.LOW if current_value == GPIO.HIGH else GPIO.HIGH
