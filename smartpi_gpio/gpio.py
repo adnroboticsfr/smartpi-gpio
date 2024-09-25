@@ -198,14 +198,20 @@ class GPIO:
     @staticmethod
     def toggle(pin_number):
         gpio = GPIO.get_instance()  # Use the singleton instance
-        gpio.toggle(pin_number) 
+        gpio.toggle(pin_number)
 
     @staticmethod
     def cleanup():
+        """Call the cleanup method on the singleton instance without recursion."""
         gpio = GPIO.get_instance()  # Use the singleton instance
-        gpio.cleanup()  # Call the instance's cleanup method
+        if gpio.exported_pins:
+            # Call the cleanup method on the GPIO instance to avoid recursion
+            exported_pins = list(gpio.exported_pins)
+            for pin in exported_pins:
+                gpio.unexport(pin)
 
     @staticmethod
     def cleanup_pin(pin_number):
         gpio = GPIO.get_instance()  # Use the singleton instance
         gpio.cleanup_pin(pin_number)
+
