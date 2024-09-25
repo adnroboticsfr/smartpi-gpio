@@ -173,22 +173,22 @@ class GPIO:
     # Helper functions to match the syntax you're using in scripts
     @staticmethod
     def setup(pin_number, mode, pull=None):
-        gpio = GPIO()
+        gpio = GPIO()  # Create a new instance of GPIO
         gpio.set_direction(pin_number, mode, pull)
 
     @staticmethod
     def output(pin_number, value):
-        gpio = GPIO()
+        gpio = GPIO()  # Create a new instance of GPIO
         gpio.write(pin_number, value)
 
     @staticmethod
     def input(pin_number):
-        gpio = GPIO()
+        gpio = GPIO()  # Create a new instance of GPIO
         return gpio.read(pin_number)
 
     @staticmethod
     def toggle(pin_number):
-        gpio = GPIO()
+        gpio = GPIO()  # Create a new instance of GPIO
         gpio.toggle(pin_number)
 
     @staticmethod
@@ -198,5 +198,5 @@ class GPIO:
 
     @staticmethod
     def cleanup_pin(pin_number):
-        gpio = GPIO()
+        gpio = GPIO()  # Create a new instance of GPIO
         gpio.cleanup_pin(pin_number)
