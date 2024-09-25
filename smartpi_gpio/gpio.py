@@ -182,28 +182,28 @@ class GPIO:
         """Unexport a specific pin."""
         self.unexport(pin_number)
 
-# Helper functions to match the syntax you're using in scripts
+    # Helper functions to match the syntax you're using in scripts
 
-def setup(pin_number, mode, pull=None):
-    gpio = GPIO()
-    gpio.set_direction(pin_number, mode, pull)
+    def setup(pin_number, mode, pull=None):
+        gpio = GPIO()
+        gpio.set_direction(pin_number, mode, pull)
 
-def output(pin_number, value):
-    gpio = GPIO()
-    gpio.write(pin_number, value)
+    def output(pin_number, value):
+        gpio = GPIO()
+        gpio.write(pin_number, value)
 
-def input(pin_number):
-    gpio = GPIO()
-    return gpio.read(pin_number)
+    def input(pin_number):
+        gpio = GPIO()
+        return gpio.read(pin_number)
 
-def toggle(pin_number):
-    gpio = GPIO()
-    gpio.toggle(pin_number)
+    def toggle(pin_number):
+        gpio = GPIO()
+        gpio.toggle(pin_number)
 
-def cleanup():
-    gpio = GPIO()
-    gpio.cleanup()
+    def cleanup():
+        gpio = GPIO()
+        gpio.cleanup()
 
-def cleanup_pin(pin_number):
-    gpio = GPIO()
-    gpio.cleanup_pin(pin_number)
+    def cleanup_pin(pin_number):
+        gpio = GPIO()
+        gpio.cleanup_pin(pin_number)
