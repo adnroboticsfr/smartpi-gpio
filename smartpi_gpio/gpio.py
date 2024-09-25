@@ -43,6 +43,19 @@ class GPIO:
             try:
                 with open(f"{GPIO_PATH}/unexport", 'w') as f:
                     f.write(str(gpio_pin))
+                # Check if gpio_pin is in exported_pins before removing
+                if gpio_pin in self.exported_pins:
+                    self.exported_pins.remove(gpio_pin)
+            except OSError as e:
+                print(f"Error unexporting pin {gpio_pin}: {e}")
+                raise
+
+        self._validate_pin(pin_number)  # Validate if the pin is correct
+        gpio_pin = Pins.get_pin(self.mode, pin_number)
+        if os.path.exists(f"{GPIO_PATH}/gpio{gpio_pin}"):
+            try:
+                with open(f"{GPIO_PATH}/unexport", 'w') as f:
+                    f.write(str(gpio_pin))
                 self.exported_pins.remove(gpio_pin)
             except OSError as e:
                 print(f"Error unexporting pin {gpio_pin}: {e}")
