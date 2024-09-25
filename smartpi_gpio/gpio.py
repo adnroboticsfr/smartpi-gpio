@@ -198,7 +198,7 @@ class GPIO:
     @staticmethod
     def toggle(pin_number):
         gpio = GPIO.get_instance()  # Use the singleton instance
-        gpio.toggle(pin_number)
+        gpio.toggle(pin_number) 
 
     @staticmethod
     def cleanup():
