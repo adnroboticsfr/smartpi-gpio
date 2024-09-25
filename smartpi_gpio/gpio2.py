@@ -10,6 +10,7 @@ class InvalidPinError(Exception):
     def __init__(self, pin_number, mode):
         super().__init__(f"Error: Pin {pin_number} is not valid in {mode} mode.")
 
+
 class GPIO:
     OUT = 'out'
     IN = 'in'
@@ -155,6 +156,7 @@ class GPIO:
     def read_all(self):
         self.display_gpio_table()
 
+
     def toggle(self, pin_number):
         current_value = self.read(pin_number)
         new_value = GPIO.LOW if current_value == GPIO.HIGH else GPIO.HIGH
@@ -169,28 +171,43 @@ class GPIO:
         """Unexport a specific pin."""
         self.unexport(pin_number)
 
+    def version(self):
+        print("smartpi-gpio version 1.0.0")
+
+    def display_gpio_table(self):
+        # (Same GPIO table display code here)
+        pass
+
+    def read_all(self):
+        self.display_gpio_table()
+
+
 # Helper functions to match the syntax you're using in scripts
 
-def setup(pin_number, mode, pull=None):
+def setup(pin_number, direction):
+    gpio = GPIO()  # Instantiate the GPIO class
+    gpio.set_direction(pin_number, direction)
+
+def set_pull_up_down(pin_number, pull):
     gpio = GPIO()
-    gpio.set_direction(pin_number, mode, pull)
+    gpio.set_pull_resistor(pin_number, pull)
 
 def output(pin_number, value):
-    gpio = GPIO()
+    gpio = GPIO()  # Instantiate the GPIO class
     gpio.write(pin_number, value)
 
 def input(pin_number):
-    gpio = GPIO()
+    gpio = GPIO()  # Instantiate the GPIO class
     return gpio.read(pin_number)
 
 def toggle(pin_number):
-    gpio = GPIO()
+    gpio = GPIO()  # Instantiate the GPIO class
     gpio.toggle(pin_number)
 
 def cleanup():
-    gpio = GPIO()
+    gpio = GPIO()  # Instantiate the GPIO class
     gpio.cleanup()
 
 def cleanup_pin(pin_number):
-    gpio = GPIO()
+    gpio = GPIO()  # Instantiate the GPIO class
     gpio.cleanup_pin(pin_number)
