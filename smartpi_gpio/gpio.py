@@ -170,33 +170,42 @@ class GPIO:
         """Unexport a specific pin.""" 
         self.unexport(pin_number)
 
+    # Singleton instance for static methods
+    _instance = None
+
+    @classmethod
+    def get_instance(cls):
+        if cls._instance is None:
+            cls._instance = GPIO()  # Create a single instance
+        return cls._instance
+
     # Helper functions to match the syntax you're using in scripts
     @staticmethod
     def setup(pin_number, mode, pull=None):
-        gpio = GPIO()  # Create a new instance of GPIO
+        gpio = GPIO.get_instance()  # Use the singleton instance
         gpio.set_direction(pin_number, mode, pull)
 
     @staticmethod
     def output(pin_number, value):
-        gpio = GPIO()  # Create a new instance of GPIO
+        gpio = GPIO.get_instance()  # Use the singleton instance
         gpio.write(pin_number, value)
 
     @staticmethod
     def input(pin_number):
-        gpio = GPIO()  # Create a new instance of GPIO
+        gpio = GPIO.get_instance()  # Use the singleton instance
         return gpio.read(pin_number)
 
     @staticmethod
     def toggle(pin_number):
-        gpio = GPIO()  # Create a new instance of GPIO
+        gpio = GPIO.get_instance()  # Use the singleton instance
         gpio.toggle(pin_number)
 
     @staticmethod
     def cleanup():
-        gpio = GPIO()  # Create a new instance for the static method
+        gpio = GPIO.get_instance()  # Use the singleton instance
         gpio.cleanup()  # Call the instance's cleanup method
 
     @staticmethod
     def cleanup_pin(pin_number):
-        gpio = GPIO()  # Create a new instance of GPIO
+        gpio = GPIO.get_instance()  # Use the singleton instance
         gpio.cleanup_pin(pin_number)
