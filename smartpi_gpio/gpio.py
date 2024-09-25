@@ -50,17 +50,6 @@ class GPIO:
                 print(f"Error unexporting pin {gpio_pin}: {e}")
                 raise
 
-        self._validate_pin(pin_number)  # Validate if the pin is correct
-        gpio_pin = Pins.get_pin(self.mode, pin_number)
-        if os.path.exists(f"{GPIO_PATH}/gpio{gpio_pin}"):
-            try:
-                with open(f"{GPIO_PATH}/unexport", 'w') as f:
-                    f.write(str(gpio_pin))
-                self.exported_pins.remove(gpio_pin)
-            except OSError as e:
-                print(f"Error unexporting pin {gpio_pin}: {e}")
-                raise
-
     def set_direction(self, pin_number, direction, pull=None):
         self._validate_pin(pin_number)  # Validate if the pin is correct
         gpio_pin = Pins.get_pin(self.mode, pin_number)
@@ -179,31 +168,37 @@ class GPIO:
             self.unexport(pin)
 
     def cleanup_pin(self, pin_number):
-        """Unexport a specific pin."""
+        """Unexport a specific pin.""" 
         self.unexport(pin_number)
 
     # Helper functions to match the syntax you're using in scripts
 
+    @staticmethod  # Ajouté pour indiquer que cette méthode n'est pas liée à une instance
     def setup(pin_number, mode, pull=None):
         gpio = GPIO()
         gpio.set_direction(pin_number, mode, pull)
 
+    @staticmethod  # Ajouté pour indiquer que cette méthode n'est pas liée à une instance
     def output(pin_number, value):
         gpio = GPIO()
         gpio.write(pin_number, value)
 
+    @staticmethod  # Ajouté pour indiquer que cette méthode n'est pas liée à une instance
     def input(pin_number):
         gpio = GPIO()
         return gpio.read(pin_number)
 
+    @staticmethod  # Ajouté pour indiquer que cette méthode n'est pas liée à une instance
     def toggle(pin_number):
         gpio = GPIO()
         gpio.toggle(pin_number)
 
+    @staticmethod  # Ajouté pour indiquer que cette méthode n'est pas liée à une instance
     def cleanup():
         gpio = GPIO()
         gpio.cleanup()
 
+    @staticmethod  # Ajouté pour indiquer que cette méthode n'est pas liée à une instance
     def cleanup_pin(pin_number):
         gpio = GPIO()
         gpio.cleanup_pin(pin_number)
