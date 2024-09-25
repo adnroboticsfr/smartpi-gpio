@@ -43,7 +43,6 @@ class GPIO:
             try:
                 with open(f"{GPIO_PATH}/unexport", 'w') as f:
                     f.write(str(gpio_pin))
-                # Check if gpio_pin is in exported_pins before removing
                 if gpio_pin in self.exported_pins:
                     self.exported_pins.remove(gpio_pin)
             except OSError as e:
@@ -172,33 +171,32 @@ class GPIO:
         self.unexport(pin_number)
 
     # Helper functions to match the syntax you're using in scripts
-
-    @staticmethod  # Ajouté pour indiquer que cette méthode n'est pas liée à une instance
+    @staticmethod
     def setup(pin_number, mode, pull=None):
         gpio = GPIO()
         gpio.set_direction(pin_number, mode, pull)
 
-    @staticmethod  # Ajouté pour indiquer que cette méthode n'est pas liée à une instance
+    @staticmethod
     def output(pin_number, value):
         gpio = GPIO()
         gpio.write(pin_number, value)
 
-    @staticmethod  # Ajouté pour indiquer que cette méthode n'est pas liée à une instance
+    @staticmethod
     def input(pin_number):
         gpio = GPIO()
         return gpio.read(pin_number)
 
-    @staticmethod  # Ajouté pour indiquer que cette méthode n'est pas liée à une instance
+    @staticmethod
     def toggle(pin_number):
         gpio = GPIO()
         gpio.toggle(pin_number)
 
-    @staticmethod  # Ajouté pour indiquer que cette méthode n'est pas liée à une instance
+    @staticmethod
     def cleanup():
-        gpio = GPIO()
-        gpio.cleanup()
+        gpio = GPIO()  # Create a new instance for the static method
+        gpio.cleanup()  # Call the instance's cleanup method
 
-    @staticmethod  # Ajouté pour indiquer que cette méthode n'est pas liée à une instance
+    @staticmethod
     def cleanup_pin(pin_number):
         gpio = GPIO()
         gpio.cleanup_pin(pin_number)
